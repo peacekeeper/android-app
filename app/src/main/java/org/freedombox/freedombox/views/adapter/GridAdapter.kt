@@ -47,7 +47,7 @@ class GridAdapter(val context: Context, val imageRenderer: ImageRenderer) : Base
         val appDetail = items[position].asJsonObject
         val locale = Locale.getDefault()
 
-        rowView.appName.text = appDetail["name"]
+        rowView.appName.text = appDetail["label"]
                 .asJsonObject[locale.language]
                 .asString
         rowView.appDescription.text = appDetail["short_description"]?.let {
