@@ -32,6 +32,7 @@ import kotlinx.android.synthetic.main.fragment_discovery.*
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
 import org.freedombox.freedombox.utils.storage.getSharedPreference
+import org.freedombox.freedombox.utils.storage.putSharedPreference
 import org.freedombox.freedombox.views.activities.LauncherActivity
 import org.freedombox.freedombox.views.adapter.DiscoveryListAdapter
 import org.freedombox.freedombox.views.adapter.DiscoveryListAdapter.OnItemClickListener
@@ -64,6 +65,18 @@ class DiscoveryFragment : BaseFragment() {
 
     @Inject lateinit var gson: Gson
 
+    private fun configureFbxForTest() {
+        val configModel = ConfigModel(
+                "Test Freedom Box",
+                "http://127.0.0.1",
+                "UserName",
+                "Password",
+                false)
+        val configuredBoxList = mutableListOf<ConfigModel>()
+        configuredBoxList.add(configModel)
+        putSharedPreference(sharedPreferences, getString(R.string.default_box), configuredBoxList)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -72,6 +85,8 @@ class DiscoveryFragment : BaseFragment() {
         discoveryListener = FBXDiscoveryListener()
 
         nsdManager.discoverServices(SERVICE, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
+
+        configureFbxForTest()
 
         val configuredBoxesJSON = getSharedPreference(sharedPreferences,
                 getString(R.string.default_box))

@@ -1,0 +1,87 @@
+{
+  "shortcuts": [
+    {
+      "name": "Syncthing",
+      "short_description": "File Synchronization",
+      "description": null,
+      "icon_url": "/plinth/static/static/theme/icons/syncthing.png",
+      "clients": [
+        {
+          "name": "Syncthing",
+          "platforms": [
+            {
+              "type": "package",
+              "format": "deb",
+              "name": "syncthing"
+            },
+            {
+              "type": "package",
+              "format": "brew",
+              "name": "syncthing"
+            },
+            {
+              "type": "download",
+              "os": "gnu-linux",
+              "url": "https://syncthing.net/"
+            },
+            {
+              "type": "download",
+              "os": "macos",
+              "url": "https://syncthing.net/"
+            },
+            {
+              "type": "download",
+              "os": "windows",
+              "url": "https://syncthing.net/"
+            },
+            {
+              "type": "store",
+              "os": "android",
+              "store_name": "google-play",
+              "url": "https://play.google.com/store/apps/details?id=com.nutomic.syncthingandroid"
+            },
+            {
+              "type": "store",
+              "os": "android",
+              "store_name": "f-droid",
+              "url": "https://f-droid.org/packages/com.nutomic.syncthingandroid"
+            },
+            {
+              "type": "web",
+              "url": "/syncthing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tiny Tiny RSS",
+      "short_description": "News Feed Reader",
+      "description": null,
+      "icon_url": "/plinth/static/static/theme/icons/ttrss.png",
+      "clients": [
+        {
+          "name": "TT-RSS Reader",
+          "platforms": [
+            {
+              "type": "store",
+              "os": "android",
+              "store_name": "google-play",
+              "url": "https://play.google.com/store/apps/details?id=org.ttrssreader"
+            },
+            {
+              "type": "store",
+              "os": "android",
+              "store_name": "f-droid",
+              "url": "https://f-droid.org/packages/org.ttrssreader"
+            },
+            {
+              "type": "web",
+              "url": "/tt-rss"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
