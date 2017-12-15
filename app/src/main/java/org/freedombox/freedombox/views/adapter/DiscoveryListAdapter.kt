@@ -22,12 +22,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import org.freedombox.freedombox.R
 
 class DiscoveryListAdapter(private val context: Context,
                            private val boxNameList: List<String>,
                            private val portList: List<String>,
+                           private val isConfigured: Boolean,
                            private val itemClickListener: DiscoveryListAdapter.OnItemClickListener) : RecyclerView.Adapter<DiscoveryListAdapter.DiscoveryListItemViewHolder>() {
 
     override fun onBindViewHolder(holder: DiscoveryListItemViewHolder?, position: Int) {
@@ -47,6 +49,7 @@ class DiscoveryListAdapter(private val context: Context,
     inner class DiscoveryListItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var boxNameTextView: TextView = view.findViewById<TextView>(R.id.boxName) as TextView
         var portNumberTextView: TextView = view.findViewById<TextView>(R.id.port) as TextView
+        var boxIcon: ImageView = view.findViewById<ImageView>(R.id.box_icon) as ImageView
 
         init {
             view.setOnClickListener { itemClickListener.onItemClick(adapterPosition) }
@@ -55,6 +58,9 @@ class DiscoveryListAdapter(private val context: Context,
         fun updateView(boxName: String, portNumber: String) {
             boxNameTextView.text = boxName
             portNumberTextView.text = portNumber
+            if (isConfigured) {
+                boxIcon.setImageResource(R.drawable.ic_freedombox_blue)
+            }
         }
     }
 

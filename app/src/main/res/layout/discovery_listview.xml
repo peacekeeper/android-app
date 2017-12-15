@@ -25,11 +25,12 @@
     tools:background="@android:color/holo_blue_light">
 
     <ImageView
+        android:id="@+id/box_icon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:contentDescription="@string/application_icon"
-        android:padding="8dp"
-        android:src="@drawable/ic_freedombox_blue" />
+        android:padding="18dp"
+        android:src="@drawable/ic_freedombox_grey" />
 
     <RelativeLayout
         android:layout_width="match_parent"

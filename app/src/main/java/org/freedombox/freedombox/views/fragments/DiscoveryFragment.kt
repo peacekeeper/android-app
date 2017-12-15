@@ -47,8 +47,6 @@ class DiscoveryFragment : BaseFragment() {
 
     private val discoveredBoxList = mutableListOf<String>()
 
-    private var configuredBoxList = listOf<String>()
-
     private val discoveredPortList = mutableListOf<String>()
 
     private var configuredPortList = listOf<String>()
@@ -56,6 +54,8 @@ class DiscoveryFragment : BaseFragment() {
     private var configuredBoxSetupList = listOf<ConfigModel>()
 
     private val SERVICE = "_freedombox._tcp"
+
+    private var configuredBoxList = listOf<String>()
 
     @Inject lateinit var sharedPreferences: SharedPreferences
 
@@ -105,7 +105,9 @@ class DiscoveryFragment : BaseFragment() {
 
             val configuredBoxListAdapter = DiscoveryListAdapter(activity!!.applicationContext,
                     configuredBoxList,
-                    configuredPortList, object : OnItemClickListener {
+                    configuredPortList,
+                    true,
+                    object : OnItemClickListener {
                 override fun onItemClick(position: Int) {
                     val intent = Intent(activity, LauncherActivity::class.java)
                     intent.putExtra(getString(R.string.current_box), configuredBoxList[position])
@@ -118,7 +120,9 @@ class DiscoveryFragment : BaseFragment() {
 
         discoveredBoxListAdapter = DiscoveryListAdapter(activity!!.applicationContext,
                 discoveredBoxList,
-                discoveredPortList, object : OnItemClickListener {
+                discoveredPortList,
+                false,
+                object : OnItemClickListener {
             override fun onItemClick(position: Int) {
                 val intent = Intent(activity, LauncherActivity::class.java)
                 intent.putExtra(getString(R.string.current_box),
