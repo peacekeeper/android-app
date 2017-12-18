@@ -20,12 +20,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="18dp">
 
     <EditText
         android:id="@+id/boxName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:hint="@string/box_name"
         android:textColor="@drawable/selector_txt" />
 
@@ -34,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/password"
+        android:layout_marginBottom="10dp"
         android:inputType="textUri"
         android:textColor="@drawable/selector_txt" />
 
@@ -42,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/boxName"
+        android:layout_marginBottom="10dp"
         android:hint="@string/username"
         android:textColor="@drawable/selector_txt" />
 
@@ -50,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/username"
+        android:layout_marginBottom="10dp"
         android:hint="@string/password"
         android:inputType="textPassword"
         android:textColor="@drawable/selector_txt" />
@@ -58,6 +63,7 @@
         android:id="@+id/setDefault"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_below="@+id/discoveredUrl"
         android:text="@string/switch_title" />
 
