@@ -46,10 +46,11 @@ class DiscoveryFragment : BaseFragment() {
     private lateinit var discoveredBoxListAdapter: DiscoveryListAdapter
 
     private val discoveredBoxList = mutableListOf<String>()
-
+    private val discoveredBoxNameList = listOf<String>()
     private val discoveredPortList = mutableListOf<String>()
 
     private var configuredPortList = listOf<String>()
+    private var configuredBoxNameList = listOf<String>()
 
     private var configuredBoxSetupList = listOf<ConfigModel>()
 
@@ -99,12 +100,14 @@ class DiscoveryFragment : BaseFragment() {
             for (configModel in configuredBoxSetupList) {
                 configuredBoxList += configModel.domain
                 configuredPortList += "80"
+                configuredBoxNameList += configModel.boxName
             }
 
             configuredGroup.visibility = View.VISIBLE
 
             val configuredBoxListAdapter = DiscoveryListAdapter(activity!!.applicationContext,
                     configuredBoxList,
+                    configuredBoxNameList,
                     configuredPortList,
                     true,
                     object : OnItemClickListener {
@@ -118,8 +121,10 @@ class DiscoveryFragment : BaseFragment() {
             configuredListView.adapter = configuredBoxListAdapter
         }
 
+
         discoveredBoxListAdapter = DiscoveryListAdapter(activity!!.applicationContext,
                 discoveredBoxList,
+                discoveredBoxNameList,
                 discoveredPortList,
                 false,
                 object : OnItemClickListener {

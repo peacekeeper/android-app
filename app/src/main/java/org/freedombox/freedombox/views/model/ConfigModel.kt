@@ -20,7 +20,7 @@ package org.freedombox.freedombox.views.model
 import android.os.Parcel
 import android.os.Parcelable
 
-data class ConfigModel(private val boxName: String,
+data class ConfigModel(val boxName: String,
                        val domain: String,
                        private val username: String,
                        private val password: String,

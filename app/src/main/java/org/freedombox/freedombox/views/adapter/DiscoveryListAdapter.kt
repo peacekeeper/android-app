@@ -17,6 +17,7 @@
 
 package org.freedombox.freedombox.views.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -27,6 +28,7 @@ import android.widget.TextView
 import org.freedombox.freedombox.R
 
 class DiscoveryListAdapter(private val context: Context,
+                           private val boxDomainList: List<String>,
                            private val boxNameList: List<String>,
                            private val portList: List<String>,
                            private val isConfigured: Boolean,
@@ -34,7 +36,7 @@ class DiscoveryListAdapter(private val context: Context,
 
     override fun onBindViewHolder(holder: DiscoveryListItemViewHolder?, position: Int) {
         holder.let {
-            holder?.updateView(boxNameList[position], portList[position])
+            holder?.updateView(boxNameList[position], boxDomainList[position], portList[position])
         }
     }
 
@@ -56,9 +58,10 @@ class DiscoveryListAdapter(private val context: Context,
             view.setOnClickListener { itemClickListener.onItemClick(adapterPosition) }
         }
 
-        fun updateView(boxName: String, portNumber: String) {
+        @SuppressLint("SetTextI18n")
+        fun updateView(boxName: String, domain: String, portNumber: String) {
             boxNameTextView.text = boxName
-            portNumberTextView.text = portNumber
+            portNumberTextView.text = domain +"/"+ portNumber
             if (isConfigured) {
                 boxIcon.setImageResource(R.drawable.ic_freedombox_blue)
             }
