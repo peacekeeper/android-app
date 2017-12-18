@@ -26,17 +26,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import org.freedombox.freedombox.R
+import org.freedombox.freedombox.views.model.ConfigModel
 
 class DiscoveryListAdapter(private val context: Context,
-                           private val boxDomainList: List<String>,
-                           private val boxNameList: List<String>,
-                           private val portList: List<String>,
+                           private val boxList: List<ConfigModel>,
                            private val isConfigured: Boolean,
                            private val itemClickListener: DiscoveryListAdapter.OnItemClickListener) : RecyclerView.Adapter<DiscoveryListAdapter.DiscoveryListItemViewHolder>() {
 
     override fun onBindViewHolder(holder: DiscoveryListItemViewHolder?, position: Int) {
         holder.let {
-            holder?.updateView(boxNameList[position], boxDomainList[position], portList[position])
+            holder?.updateView(boxList[position])
         }
     }
 
@@ -46,7 +45,7 @@ class DiscoveryListAdapter(private val context: Context,
         return DiscoveryListItemViewHolder(view)
     }
 
-    override fun getItemCount(): Int = boxNameList.size
+    override fun getItemCount(): Int = boxList.size
 
     inner class DiscoveryListItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var boxNameTextView: TextView = view.findViewById<TextView>(R.id.boxName) as TextView
@@ -59,13 +58,13 @@ class DiscoveryListAdapter(private val context: Context,
         }
 
         @SuppressLint("SetTextI18n")
-        fun updateView(boxName: String, domain: String, portNumber: String) {
-            boxNameTextView.text = boxName
-            portNumberTextView.text = domain +"/"+ portNumber
+        fun updateView(box: ConfigModel) {
+            boxNameTextView.text = box.boxName
+            portNumberTextView.text = box.domain +"/"+ "80"
             if (isConfigured) {
                 boxIcon.setImageResource(R.drawable.ic_freedombox_blue)
             }
-            if (boxNameList.size == 1) {
+            if (boxList.size == 1) {
                 borderBottom.visibility = View.INVISIBLE
             }
         }

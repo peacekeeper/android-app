@@ -45,18 +45,13 @@ class DiscoveryFragment : BaseFragment() {
 
     private lateinit var discoveredBoxListAdapter: DiscoveryListAdapter
 
-    private val discoveredBoxList = mutableListOf<String>()
-    private val discoveredBoxNameList = listOf<String>()
-    private val discoveredPortList = mutableListOf<String>()
-
-    private var configuredPortList = listOf<String>()
-    private var configuredBoxNameList = listOf<String>()
+    private val discoveredBoxList = mutableListOf<ConfigModel>()
 
     private var configuredBoxSetupList = listOf<ConfigModel>()
 
-    private val SERVICE = "_freedombox._tcp"
+    private val SERVICE = "_http._tcp"
 
-    private var configuredBoxList = listOf<String>()
+    private var configuredBoxList = listOf<ConfigModel>()
 
     @Inject lateinit var sharedPreferences: SharedPreferences
 
@@ -98,17 +93,13 @@ class DiscoveryFragment : BaseFragment() {
                     fromJson<List<ConfigModel>>(configuredBoxesJSON,
                             object : TypeToken<List<ConfigModel>>() {}.type)
             for (configModel in configuredBoxSetupList) {
-                configuredBoxList += configModel.domain
-                configuredPortList += "80"
-                configuredBoxNameList += configModel.boxName
+                configuredBoxList += configModel
             }
 
             configuredGroup.visibility = View.VISIBLE
 
             val configuredBoxListAdapter = DiscoveryListAdapter(activity!!.applicationContext,
                     configuredBoxList,
-                    configuredBoxNameList,
-                    configuredPortList,
                     true,
                     object : OnItemClickListener {
                 override fun onItemClick(position: Int) {
@@ -124,8 +115,6 @@ class DiscoveryFragment : BaseFragment() {
 
         discoveredBoxListAdapter = DiscoveryListAdapter(activity!!.applicationContext,
                 discoveredBoxList,
-                discoveredBoxNameList,
-                discoveredPortList,
                 false,
                 object : OnItemClickListener {
             override fun onItemClick(position: Int) {
@@ -173,8 +162,8 @@ class DiscoveryFragment : BaseFragment() {
                 it.domain == serviceInfo.host.toString()
             }
             if (portConfigured.isEmpty()) {
-                discoveredBoxList.add(serviceInfo.host.toString())
-                discoveredPortList.add(serviceInfo.port.toString())
+                discoveredBoxList.add(ConfigModel(serviceInfo.host.toString(), serviceInfo.host.toString(), "", "", false ))
+                Log.d(TAG, discoveredBoxList[0].boxName)
             }
             activity!!.runOnUiThread {
                 discoveredBoxListAdapter.notifyDataSetChanged()
@@ -188,7 +177,6 @@ class DiscoveryFragment : BaseFragment() {
             Log.d(TAG, String.format("onServiceFound() serviceType %s", serviceInfo.serviceType))
             Log.d(TAG, String.format("onServiceFound() serviceName %s", serviceInfo.serviceName))
             discoveredBoxList.clear()
-            discoveredPortList.clear()
             nsdManager.resolveService(serviceInfo, FBXResolveListener())
         }
 
