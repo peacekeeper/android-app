@@ -37,7 +37,7 @@ class LauncherActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val intent = Intent(this, DiscoveryActivity::class.java)
+        val intent = Intent(this, SetupActivity::class.java)
         startActivity(intent)
         return super.onOptionsItemSelected(item)
     }
