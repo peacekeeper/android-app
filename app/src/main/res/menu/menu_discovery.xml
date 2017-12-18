@@ -21,7 +21,7 @@
       tools:context="com.saikailas.ooty.organization.ArticleDetailActivity">
     <item
         android:id="@+id/action_settings"
-        android:icon="@drawable/ic_logo"
+        android:icon="@drawable/ic_settings"
         app:showAsAction="always"
         android:title="@string/settings" />
 </menu>
