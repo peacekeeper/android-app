@@ -50,6 +50,7 @@ class DiscoveryListAdapter(private val context: Context,
         var boxNameTextView: TextView = view.findViewById<TextView>(R.id.boxName) as TextView
         var portNumberTextView: TextView = view.findViewById<TextView>(R.id.port) as TextView
         var boxIcon: ImageView = view.findViewById<ImageView>(R.id.box_icon) as ImageView
+        var borderBottom: View = view.findViewById<View>(R.id.bottom_border) as View
 
         init {
             view.setOnClickListener { itemClickListener.onItemClick(adapterPosition) }
@@ -60,6 +61,9 @@ class DiscoveryListAdapter(private val context: Context,
             portNumberTextView.text = portNumber
             if (isConfigured) {
                 boxIcon.setImageResource(R.drawable.ic_freedombox_blue)
+            }
+            if (boxNameList.size == 1) {
+                borderBottom.visibility = View.INVISIBLE
             }
         }
     }
