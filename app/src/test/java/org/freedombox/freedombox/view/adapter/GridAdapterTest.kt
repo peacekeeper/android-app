@@ -40,17 +40,34 @@ class GridAdapterTest {
     private val gridAdapter = GridAdapter(applicationContext, imageRenderer = ImageRenderer(applicationContext))
     private var jsonArray = JsonArray()
     private val jsonObject = JsonParser().parse("""
-    {
-      "label": {
-        "en": "conversations",
-        "te": "సంభాషణలు"
-      },
-      "description": {
-        "en": "someDescription"
-      },
-      "icon": "icons/conversations",
-      "color": "#FF33B5E5"
-    } """).asJsonObject
+{
+   "shortcuts":[
+      {
+         "name":"Deluge",
+         "short_description":"BitTorrent Web Client",
+         "description":null,
+         "icon_url":"\/plinth\/static\/theme\/icons\/deluge.png",
+         "clients":[
+            {
+               "name":"Deluge",
+               "description":"Bittorrent client written in Python\/PyGTK",
+               "platforms":[
+                  {
+                     "type":"web",
+                     "url":"\/deluge"
+                  },
+                  {
+                     "type":"package",
+                     "format":"deb",
+                     "name":"deluge"
+                  }
+               ]
+            }
+         ]
+      }
+   ]
+}
+    """).asJsonObject
 
     @Before
     fun setUp() {
@@ -77,7 +94,7 @@ class GridAdapterTest {
 
         val view = gridAdapter.getView(0, null, null)
 
-        assertEquals(view.appName.text.toString(), "conversations")
-        assertEquals(view.appDescription.text.toString(), "someDescription")
+        assertEquals(view.appName.text.toString(), "Deluge")
+        assertEquals(view.appDescription.text.toString(), "BitTorrent Web Client")
     }
 }

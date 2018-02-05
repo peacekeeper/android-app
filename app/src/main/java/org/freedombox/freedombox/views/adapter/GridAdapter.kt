@@ -18,23 +18,19 @@
 package org.freedombox.freedombox.views.adapter
 
 import android.content.Context
-import android.graphics.Color
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.app_container.view.appDescription
-import kotlinx.android.synthetic.main.app_container.view.appIcon
-import kotlinx.android.synthetic.main.app_container.view.appName
-import kotlinx.android.synthetic.main.app_container.view.cardHolder
-import org.freedombox.freedombox.DEFAULT_IP
+import kotlinx.android.synthetic.main.app_container.view.*
+import org.freedombox.freedombox.BASE_URL
 import org.freedombox.freedombox.R
-import org.freedombox.freedombox.SERVICES_URL
 import org.freedombox.freedombox.utils.ImageRenderer
-import java.util.Locale
+import org.freedombox.freedombox.utils.network.urlJoin
 
 class GridAdapter(val context: Context, val imageRenderer: ImageRenderer) : BaseAdapter() {
 
@@ -45,18 +41,18 @@ class GridAdapter(val context: Context, val imageRenderer: ImageRenderer) : Base
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val rowView = inflater.inflate(R.layout.app_container, null)
         val appDetail = items[position].asJsonObject
-        val locale = Locale.getDefault()
+        // val locale = Locale.getDefault()
 
-        rowView.appName.text = appDetail["label"]
-                .asJsonObject[locale.language]
+        rowView.appName.text = appDetail["name"]
+                //.asJsonObject[locale.language]
                 .asString
         rowView.appDescription.text = appDetail["short_description"]?.let {
             appDetail["short_description"]
-                    .asJsonObject[locale.language]
+                    //.asJsonObject[locale.language]
                     .asString
         }
 
-        val url = listOf(DEFAULT_IP, appDetail["icon"].asString).joinToString(separator = "/")
+        val url = urlJoin(BASE_URL, appDetail["icon_url"].asString)
         imageRenderer.loadImageFromURL(
                 Uri.parse(url),
                 rowView.appIcon
@@ -64,7 +60,7 @@ class GridAdapter(val context: Context, val imageRenderer: ImageRenderer) : Base
 
         rowView.appIcon.setOnClickListener {}
 
-        rowView.cardHolder.setBackgroundColor(Color.parseColor(appDetail["color"].asString))
+        // rowView.cardHolder.setBackgroundColor(Color.parseColor(appDetail["color"].asString))
 
         return rowView
     }

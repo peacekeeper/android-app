@@ -19,16 +19,15 @@ package org.freedombox.freedombox.views.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.google.gson.JsonParser
 import kotlinx.android.synthetic.main.fragment_launcher.*
-import org.freedombox.freedombox.APP_RESPONSE
-import org.freedombox.freedombox.DEFAULT_IP
-import org.freedombox.freedombox.R
-import org.freedombox.freedombox.SERVICES_URL
+import org.freedombox.freedombox.*
 import org.freedombox.freedombox.components.AppComponent
 import org.freedombox.freedombox.utils.ImageRenderer
 import org.freedombox.freedombox.utils.network.getFBXApps
+import org.freedombox.freedombox.utils.network.urlJoin
 import org.freedombox.freedombox.views.adapter.GridAdapter
 import org.json.JSONObject
 import javax.inject.Inject
@@ -56,7 +55,7 @@ class LauncherFragment : BaseFragment() {
         }*/
 
         val onSuccess = fun(response: JSONObject) {
-            val services = JsonParser().parse(response["services"].toString()).asJsonArray
+            val services = JsonParser().parse(response["shortcuts"].toString()).asJsonArray
             sharedPreferences.edit().putString(APP_RESPONSE, services.toString()).apply()
             adapter.setData(services)
         }
@@ -72,7 +71,7 @@ class LauncherFragment : BaseFragment() {
         }
 
         //TODO: Use the URL from settings once it is setup
-        val url = listOf(DEFAULT_IP, SERVICES_URL).joinToString(separator = "/")
+        val url = urlJoin(API_URL, SERVICES_URL)
 
         getFBXApps(context!!, url, onSuccess, onFailure)
     }

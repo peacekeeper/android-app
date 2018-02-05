@@ -19,6 +19,7 @@ package org.freedombox.freedombox.view.adapter
 import android.content.Context
 import org.freedombox.freedombox.BuildConfig
 import org.freedombox.freedombox.views.adapter.DiscoveryListAdapter
+import org.freedombox.freedombox.views.model.ConfigModel
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -32,21 +33,15 @@ import org.robolectric.annotation.Config
 class DiscoveryListAdapterTest {
 
     private val applicationContext: Context = RuntimeEnvironment.application.applicationContext
-    private val boxNameList = mutableListOf<String>()
-    private val portList = mutableListOf<String>()
     private lateinit var listAdapter: DiscoveryListAdapter
-    private val boxName1 = "box1"
-    private val boxName2 = "box2"
-    private val portName1 = "port1"
-    private val portName2 = "port2"
+    private val box1 = ConfigModel("box1", "alice.freedombox.rocks", "alice", "blah*123", false)
+    private val box2 = ConfigModel("box2", "bob.freedombox.rocks", "bob", "meh@123", false)
+    private val boxList = listOf<ConfigModel>(box1, box2)
 
     @Before
     fun setUp() {
-        boxNameList.add(boxName1)
-        portList.add(portName1)
-        boxNameList.add(boxName2)
-        portList.add(portName2)
-        listAdapter = DiscoveryListAdapter(applicationContext, boxNameList, portList, object : DiscoveryListAdapter.OnItemClickListener {
+        listAdapter = DiscoveryListAdapter(applicationContext, boxList, false,
+                object : DiscoveryListAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -60,12 +55,12 @@ class DiscoveryListAdapterTest {
 
     @Test
     fun testGetItemAtPositionZero() {
-        Assert.assertEquals(listAdapter.getItemId(0), boxNameList[0])
+        Assert.assertEquals(listAdapter.getItemId(0), boxList[0])
     }
 
     @Test
     fun testGetItemIdAtPositionOne() {
-        Assert.assertEquals(listAdapter.getItemId(1), boxNameList[1].hashCode().toLong())
+        Assert.assertEquals(listAdapter.getItemId(1), boxList[1].hashCode().toLong())
     }
 
 }
