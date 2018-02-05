@@ -18,6 +18,7 @@
 package org.freedombox.freedombox.utils.network
 
 import android.content.Context
+import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -36,8 +37,14 @@ fun getFBXApps(context: Context, uri: String, onSuccess: (JSONObject) -> Unit,
             onSuccess(it)
         },
         Response.ErrorListener {
+            Log.e("Failure: ", it.toString())
             onFailure()
         }
     )
     requestQueue.add(jsonObjectResponse)
+}
+
+
+fun urlJoin(vararg urls: String): String {
+    return urls.map { it.trim('/') }.joinToString(separator = "/")
 }
