@@ -41,31 +41,27 @@ class GridAdapterTest {
     private var jsonArray = JsonArray()
     private val jsonObject = JsonParser().parse("""
 {
-   "shortcuts":[
-      {
-         "name":"Deluge",
-         "short_description":"BitTorrent Web Client",
-         "description":null,
-         "icon_url":"\/plinth\/static\/theme\/icons\/deluge.png",
-         "clients":[
-            {
-               "name":"Deluge",
-               "description":"Bittorrent client written in Python\/PyGTK",
-               "platforms":[
-                  {
-                     "type":"web",
-                     "url":"\/deluge"
-                  },
-                  {
-                     "type":"package",
-                     "format":"deb",
-                     "name":"deluge"
-                  }
-               ]
-            }
-         ]
-      }
-   ]
+  "name": "Deluge",
+  "short_description": "BitTorrent Web Client",
+  "description": null,
+  "icon_url": "/plinth/static/theme/icons/deluge.png",
+  "clients": [
+    {
+      "name": "Deluge",
+      "description": "Bittorrent client written in Python/PyGTK",
+      "platforms": [
+        {
+          "type": "web",
+          "url": "/deluge"
+        },
+        {
+          "type": "package",
+          "format": "deb",
+          "name": "deluge"
+        }
+      ]
+    }
+  ]
 }
     """).asJsonObject
 

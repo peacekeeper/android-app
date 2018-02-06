@@ -54,8 +54,8 @@ class DiscoveryListAdapterTest {
     }
 
     @Test
-    fun testGetItemAtPositionZero() {
-        Assert.assertEquals(listAdapter.getItemId(0), boxList[0])
+    fun testGetItemViewTypeAtPositionZero() {
+        Assert.assertEquals(listAdapter.getItemViewType(0), 0)
     }
 
     @Test

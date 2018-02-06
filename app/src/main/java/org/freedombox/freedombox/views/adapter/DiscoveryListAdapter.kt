@@ -47,6 +47,14 @@ class DiscoveryListAdapter(private val context: Context,
 
     override fun getItemCount(): Int = boxList.size
 
+    override fun getItemId(position: Int): Long {
+        return boxList[position].hashCode().toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return 0
+    }
+
     inner class DiscoveryListItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var boxNameTextView: TextView = view.findViewById<TextView>(R.id.boxName) as TextView
         var portNumberTextView: TextView = view.findViewById<TextView>(R.id.port) as TextView
