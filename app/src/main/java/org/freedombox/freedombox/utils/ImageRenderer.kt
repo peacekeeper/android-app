@@ -55,8 +55,7 @@ class ImageRenderer(val context: Context) {
     fun loadImageFromURL(url: Uri, imageView: ImageView) {
         Glide.with(context)
                 .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .error(R.drawable.ic_logo)
+                .error(R.drawable.ic_freedombox_blue)
                 .into(imageView)
     }
 }

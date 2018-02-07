@@ -27,8 +27,8 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        card_view:cardBackgroundColor="@android:color/holo_red_light"
+        android:layout_height="182dp"
+        card_view:cardBackgroundColor="@android:color/white"
         card_view:cardCornerRadius="3dp"
         card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
@@ -41,14 +41,14 @@
 
             <ImageView
                 android:id="@+id/appIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:adjustViewBounds="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="2dp"
                 android:contentDescription="@string/application_icon"
                 android:padding="5dp"
-                android:scaleType="center" />
+                android:scaleType="centerInside" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -57,15 +57,13 @@
 
                 <TextView
                     android:id="@+id/appName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/infoImageView"
-                    android:layout_toStartOf="@+id/infoImageView"
-                    android:gravity="start"
-                    android:padding="10dp"
-                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:textSize="14dp"
+                    android:textColor="#0D47A1"
                     tools:text="Conversations" />
 
                 <TextView
@@ -76,34 +74,27 @@
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/appName"
                     android:layout_centerInParent="true"
-                    android:layout_toLeftOf="@+id/infoImageView"
-                    android:layout_toStartOf="@+id/infoImageView"
-                    android:gravity="start"
-                    android:padding="10dp"
-                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:textSize="12dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:textColor="@android:color/darker_gray"
+                    android:singleLine="false"
                     tools:text="Conversations Category" />
 
-                <ImageView
-                    android:id="@+id/infoImageView"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:contentDescription="@string/information"
-                    android:padding="5dp"
-                    android:src="@android:drawable/ic_dialog_info" />
-
-                <ImageView
-                    android:id="@+id/installationStatusImageView"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignBottom="@id/appDescription"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:contentDescription="@string/installation_status"
-                    android:padding="5dp"
-                    android:src="@android:drawable/ic_dialog_info" />
             </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/infoImageView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:contentDescription="@string/information"
+                android:padding="5dp"
+                android:src="@drawable/information_outline" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

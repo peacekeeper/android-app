@@ -1,8 +1,8 @@
 <resources>
 
     <style name="FreedomBoxTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">#1623CF</item>
+        <item name="colorPrimaryDark">#1623CF</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
