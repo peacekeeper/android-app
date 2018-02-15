@@ -32,7 +32,6 @@ import kotlinx.android.synthetic.main.fragment_discovery.*
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
 import org.freedombox.freedombox.utils.storage.getSharedPreference
-import org.freedombox.freedombox.utils.storage.putSharedPreference
 import org.freedombox.freedombox.views.activities.LauncherActivity
 import org.freedombox.freedombox.views.adapter.DiscoveryListAdapter
 import org.freedombox.freedombox.views.adapter.DiscoveryListAdapter.OnItemClickListener
@@ -53,25 +52,15 @@ class DiscoveryFragment : BaseFragment() {
 
     private var configuredBoxList = listOf<ConfigModel>()
 
-    @Inject lateinit var sharedPreferences: SharedPreferences
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var nsdManager: NsdManager
 
     private lateinit var discoveryListener: FBXDiscoveryListener
 
-    @Inject lateinit var gson: Gson
-
-    private fun configureFbxForTest() {
-        val configModel = ConfigModel(
-                "Test Freedom Box",
-                "http://127.0.0.1",
-                "UserName",
-                "Password",
-                false)
-        val configuredBoxList = mutableListOf<ConfigModel>()
-        configuredBoxList.add(configModel)
-        putSharedPreference(sharedPreferences, getString(R.string.default_box), configuredBoxList)
-    }
+    @Inject
+    lateinit var gson: Gson
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -82,16 +71,12 @@ class DiscoveryFragment : BaseFragment() {
 
         nsdManager.discoverServices(SERVICE, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
 
-        configureFbxForTest()
-
         val configuredBoxesJSON = getSharedPreference(sharedPreferences,
                 getString(R.string.default_box))
 
-
         configuredBoxesJSON?.let {
-            configuredBoxSetupList += gson.
-                    fromJson<List<ConfigModel>>(configuredBoxesJSON,
-                            object : TypeToken<List<ConfigModel>>() {}.type)
+            configuredBoxSetupList += gson.fromJson<List<ConfigModel>>(configuredBoxesJSON,
+                    object : TypeToken<List<ConfigModel>>() {}.type)
             for (configModel in configuredBoxSetupList) {
                 configuredBoxList += configModel
             }
@@ -102,28 +87,27 @@ class DiscoveryFragment : BaseFragment() {
                     configuredBoxList,
                     true,
                     object : OnItemClickListener {
-                override fun onItemClick(position: Int) {
-                    val intent = Intent(activity, LauncherActivity::class.java)
-                    intent.putExtra(getString(R.string.current_box), configuredBoxList[position])
-                    startActivity(intent)
-                }
-            })
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(activity, LauncherActivity::class.java)
+                            intent.putExtra(getString(R.string.current_box), configuredBoxList[position])
+                            startActivity(intent)
+                        }
+                    })
             configuredListView.layoutManager = LinearLayoutManager(activity)
             configuredListView.adapter = configuredBoxListAdapter
         }
-
 
         discoveredBoxListAdapter = DiscoveryListAdapter(activity!!.applicationContext,
                 discoveredBoxList,
                 false,
                 object : OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                val intent = Intent(activity, LauncherActivity::class.java)
-                intent.putExtra(getString(R.string.current_box),
-                        discoveredBoxList[position])
-                startActivity(intent)
-            }
-        })
+                    override fun onItemClick(position: Int) {
+                        val intent = Intent(activity, LauncherActivity::class.java)
+                        intent.putExtra(getString(R.string.current_box),
+                                discoveredBoxList[position])
+                        startActivity(intent)
+                    }
+                })
         discoveredListView.layoutManager = LinearLayoutManager(activity)
         discoveredListView.adapter = discoveredBoxListAdapter
     }
@@ -162,7 +146,8 @@ class DiscoveryFragment : BaseFragment() {
                 it.domain == serviceInfo.host.toString()
             }
             if (portConfigured.isEmpty()) {
-                discoveredBoxList.add(ConfigModel(serviceInfo.host.toString(), serviceInfo.host.toString(), "", "", false ))
+                discoveredBoxList.add(ConfigModel(serviceInfo.host.toString(),
+                        serviceInfo.host.toString(), "", "", false))
                 Log.d(TAG, discoveredBoxList[0].boxName)
             }
             activity!!.runOnUiThread {

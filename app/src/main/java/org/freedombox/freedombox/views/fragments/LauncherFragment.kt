@@ -21,15 +21,18 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.google.gson.JsonParser
+import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.fragment_launcher.*
-import org.freedombox.freedombox.*
+import org.freedombox.freedombox.API_URL
+import org.freedombox.freedombox.APP_RESPONSE
+import org.freedombox.freedombox.R
+import org.freedombox.freedombox.SERVICES_URL
 import org.freedombox.freedombox.components.AppComponent
+import org.freedombox.freedombox.models.Shortcuts
 import org.freedombox.freedombox.utils.ImageRenderer
-import org.freedombox.freedombox.utils.network.getFBXApps
+import org.freedombox.freedombox.utils.network.getApps
 import org.freedombox.freedombox.utils.network.urlJoin
 import org.freedombox.freedombox.views.adapter.GridAdapter
-import org.json.JSONObject
 import javax.inject.Inject
 
 class LauncherFragment : BaseFragment() {
@@ -47,24 +50,23 @@ class LauncherFragment : BaseFragment() {
 
         appGrid.adapter = adapter
 
-        /*fab.setOnClickListener {
-            val currentBoxName = activity!!.intent.getStringExtra(getString(R.string.current_box))
-            val intent = Intent(activity, SetupActivity::class.java)
-            intent.putExtra(getString(R.string.current_box), currentBoxName)
-            startActivity(intent)
-        }*/
+        fun getShortcutsFromResponse(response: String): Shortcuts? {
+            val builder = GsonBuilder()
+            val gson = builder.create()
+            Log.d("RESPONSE:", response)
+            return gson.fromJson(response, Shortcuts::class.java)
+        }
 
-        val onSuccess = fun(response: JSONObject) {
-            val services = JsonParser().parse(response["shortcuts"].toString()).asJsonArray
-            sharedPreferences.edit().putString(APP_RESPONSE, services.toString()).apply()
-            adapter.setData(services)
+        val onSuccess = fun(response: String) {
+            sharedPreferences.edit().putString(APP_RESPONSE, response).apply() // TODO
+            adapter.setData(getShortcutsFromResponse(response)!!.shortcuts)
         }
 
         val onFailure = fun() {
             if (sharedPreferences.contains(APP_RESPONSE)) {
-                val services = sharedPreferences.getString(APP_RESPONSE, "[]")
+                val old_shortcuts = sharedPreferences.getString(APP_RESPONSE, "[]")
 
-                adapter.setData(JsonParser().parse(services).asJsonArray)
+                adapter.setData(getShortcutsFromResponse(old_shortcuts)!!.shortcuts)
             } else {
                 appsNotAvailable.visibility = View.VISIBLE
             }
@@ -73,7 +75,7 @@ class LauncherFragment : BaseFragment() {
         //TODO: Use the URL from settings once it is setup
         val url = urlJoin(API_URL, SERVICES_URL)
 
-        getFBXApps(context!!, url, onSuccess, onFailure)
+        getApps(context!!, url, onSuccess, onFailure)
     }
 
     companion object {

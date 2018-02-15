@@ -24,55 +24,48 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.app_container.view.*
 import org.freedombox.freedombox.BASE_URL
 import org.freedombox.freedombox.R
+import org.freedombox.freedombox.models.Shortcut
 import org.freedombox.freedombox.utils.ImageRenderer
+import org.freedombox.freedombox.utils.network.launchApp
 import org.freedombox.freedombox.utils.network.urlJoin
 
 class GridAdapter(val context: Context, val imageRenderer: ImageRenderer) : BaseAdapter() {
 
-    private var items = JsonArray()
+    private var items = listOf<Shortcut>()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val inflater = context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val rowView = inflater.inflate(R.layout.app_container, null)
-        val appDetail = items[position].asJsonObject
-        // val locale = Locale.getDefault()
+        val shortcut = items[position]
 
-        rowView.appName.text = appDetail["name"]
-                //.asJsonObject[locale.language]
-                .asString
-        rowView.appDescription.text = appDetail["short_description"]?.let {
-            appDetail["short_description"]
-                    //.asJsonObject[locale.language]
-                    .asString
-        }
-
-        val url = urlJoin(BASE_URL, appDetail["icon_url"].asString)
+        rowView.appName.text = shortcut.name
+        rowView.appDescription.text = shortcut.shortDescription
+        Log.d("GridAdapter:", shortcut.toString())
+        val url = urlJoin(BASE_URL, shortcut.iconUrl)
         imageRenderer.loadImageFromURL(
                 Uri.parse(url),
                 rowView.appIcon
         )
 
-        rowView.appIcon.setOnClickListener {}
+        rowView.appIcon.setOnClickListener { launchApp(shortcut, context)}
 
         // rowView.cardHolder.setBackgroundColor(Color.parseColor(appDetail["color"].asString))
 
         return rowView
     }
 
-    override fun getItem(position: Int): JsonObject = items[position].asJsonObject
+    override fun getItem(position: Int): Shortcut = items[position]
 
     override fun getItemId(position: Int) = items[position].hashCode().toLong()
 
-    override fun getCount() = items.size()
+    override fun getCount() = items.size
 
-    fun setData(jsonArray: JsonArray) {
-        items = jsonArray
+    fun setData(shortcuts: List<Shortcut>) {
+        items = shortcuts
 
         notifyDataSetChanged()
     }
