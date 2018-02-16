@@ -17,11 +17,10 @@
 package org.freedombox.freedombox.view.adapter
 
 import android.content.Context
-import com.google.gson.JsonArray
-import com.google.gson.JsonParser
-import kotlinx.android.synthetic.main.app_container.view.appDescription
-import kotlinx.android.synthetic.main.app_container.view.appName
+import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.app_container.view.*
 import org.freedombox.freedombox.BuildConfig
+import org.freedombox.freedombox.models.Shortcut
 import org.freedombox.freedombox.utils.ImageRenderer
 import org.freedombox.freedombox.views.adapter.GridAdapter
 import org.junit.Assert.assertEquals
@@ -38,8 +37,9 @@ import org.robolectric.annotation.Config
 class GridAdapterTest {
     private val applicationContext: Context = application.applicationContext
     private val gridAdapter = GridAdapter(applicationContext, imageRenderer = ImageRenderer(applicationContext))
-    private var jsonArray = JsonArray()
-    private val jsonObject = JsonParser().parse("""
+    private val gson = GsonBuilder().create()
+    private var items = mutableListOf<Shortcut>()
+    private val shortcut = gson.fromJson("""
 {
   "name": "Deluge",
   "short_description": "BitTorrent Web Client",
@@ -63,30 +63,30 @@ class GridAdapterTest {
     }
   ]
 }
-    """).asJsonObject
+    """, Shortcut::class.java)
 
     @Before
     fun setUp() {
-        jsonArray.add(jsonObject)
+        items.add(shortcut)
     }
 
     @Test
     fun testItemCount() {
-        gridAdapter.setData(jsonArray)
+        gridAdapter.setData(items)
 
         assertEquals(gridAdapter.count, 1)
     }
 
     @Test
     fun testGetItemAtPosition() {
-        gridAdapter.setData(jsonArray)
+        gridAdapter.setData(items)
 
-        assertEquals(gridAdapter.getItem(0), jsonObject)
+        assertEquals(gridAdapter.getItem(0), items[0])
     }
 
     @Test
     fun testViewIsGettingPopulated() {
-        gridAdapter.setData(jsonArray)
+        gridAdapter.setData(items)
 
         val view = gridAdapter.getView(0, null, null)
 
