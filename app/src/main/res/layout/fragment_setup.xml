@@ -38,6 +38,7 @@
         android:layout_below="@+id/password"
         android:layout_marginBottom="10dp"
         android:inputType="textUri"
+        android:hint="@string/discovered_url"
         android:textColor="@drawable/selector_txt" />
 
     <EditText
