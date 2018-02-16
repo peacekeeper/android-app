@@ -29,6 +29,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.freedombox.freedombox.BASE_URL
+import org.freedombox.freedombox.models.Platform
 import org.freedombox.freedombox.models.Shortcut
 
 
@@ -55,7 +56,7 @@ fun urlJoin(vararg urls: String): String {
 }
 
 fun launchApp(shortcut: Shortcut, context: Context) {
-    val appName = getLaunchString(shortcut)
+    val appName = getLaunchString(shortcut, context.packageManager)
     if (appName.isNotBlank()) {
         val intent = getIntent(appName, context.packageManager)
         if (intent != null) {
@@ -77,7 +78,14 @@ fun launchApp(shortcut: Shortcut, context: Context) {
     }
 }
 
-fun getLaunchString(shortcut: Shortcut): String {
+/**
+ * Returns a string that can be used in an Android intent (web or package)
+ * The order of preference for Android apps is as follows:
+ *   1. an already installed app
+ *   2. F-Droid app
+ *   3. Google Play app
+ */
+fun getLaunchString(shortcut: Shortcut, packageManager: PackageManager): String {
     val androidClients = shortcut.clients.filter { it.platforms.any { it.os == "android" } }
     return if (androidClients.isEmpty()) {
         val webClients = shortcut.clients.filter { it.platforms.any { it.type == "web" } }
@@ -86,16 +94,40 @@ fun getLaunchString(shortcut: Shortcut): String {
             urlJoin(BASE_URL, platform.url)
         } else ""
     } else {
-        val fDroidClients = androidClients.filter { it.platforms.any { it.storeName == "f-droid" } }
-        if (fDroidClients.isNotEmpty()) {
-            val url = fDroidClients.first().platforms.first { it.storeName == "f-droid" }.url
-            url.split("/").last()
+        val installedApps = findInstalledApps(getAndroidPackageNames(shortcut), packageManager)
+        if (installedApps.isNotEmpty()) {
+            Log.d("Installed app: ", installedApps.first())
+            return installedApps.first()  // TODO Handle the case of multiple installed apps
         } else {
-            val platform = androidClients.first().platforms.find { it.storeName == "google-play" }
-            platform?.url?.split("=")?.last() ?: ""
+            val fDroidClients = androidClients.filter { it.platforms.any { it.storeName == "f-droid" } }
+            if (fDroidClients.isNotEmpty()) {
+                val url = fDroidClients.first().platforms.first { it.storeName == "f-droid" }.url
+                url.split("/").last()
+            } else {
+                val platform = androidClients.first().platforms.find { it.storeName == "google-play" }
+                platform?.url?.split("=")?.last() ?: ""
+            }
         }
     }
 }
+
+fun findInstalledApps(packageNames: List<String>, packageManager: PackageManager): List<String> {
+    val apps = packageManager.getInstalledApplications(0)
+    return apps.filter { app -> app.enabled and (app.packageName in packageNames) }.map { it.packageName }
+}
+
+/**
+ * Returns a list of Android package names for a given shortcut.
+ */
+fun getAndroidPackageNames(shortcut: Shortcut): List<String> {
+    val platforms = shortcut.clients.flatMap { it.platforms.filter { it.os == "android" } }
+    return platforms.map { extractPackageName(it) }.distinct()
+}
+
+fun extractPackageName(platform: Platform) =
+        if (platform.storeName == "f-droid") {
+            platform.url.split("/").last()
+        } else platform.url.split("=").last()
 
 fun getIntent(url: String, packageManager: PackageManager) =
         if (url.startsWith("http")) getWebIntent(url) else getAppIntent(url, packageManager)
