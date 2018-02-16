@@ -22,18 +22,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import org.freedombox.freedombox.BASE_URL
 import org.freedombox.freedombox.models.Shortcut
 
 
-fun getApps(context: Context, uri: String, onSuccess: (String) -> Unit,
-               onFailure: () -> Unit) {
+fun getApps(context: Context, uri: String,
+            onSuccess: (String) -> Unit,
+            onFailure: () -> Unit) {
 
     val requestQueue = Volley.newRequestQueue(context)
 
@@ -54,47 +55,52 @@ fun urlJoin(vararg urls: String): String {
 }
 
 fun launchApp(shortcut: Shortcut, context: Context) {
-    val app = getLaunchString(shortcut, context)
-    val intent = getIntent(app, context.packageManager)
-    if (intent != null) {
-        context.startActivity(intent)
+    val appName = getLaunchString(shortcut)
+    if (appName.isNotBlank()) {
+        val intent = getIntent(appName, context.packageManager)
+        if (intent != null) {
+            context.startActivity(intent)
+        } else {
+            try {
+                // Take to page on the app store
+                context.startActivity(Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=$appName")))
+            } catch (ex: ActivityNotFoundException) {
+                // Case for devices with no app store apps installed
+                Log.e("ERROR", ex.message)
+                Toast.makeText(context, "App not installed",
+                        Toast.LENGTH_SHORT).show()
+            }
+        }
     } else {
-        try {
-            // Take to page on the app store
-            context.startActivity(Intent(Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=$app")))
-        } catch (ex: ActivityNotFoundException) {
-            // Case for devices with no app store apps installed
-            Log.e("ERROR", ex.message)
-            Toast.makeText(context, "App not installed",
-                    Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "No apps defined", Toast.LENGTH_SHORT).show()
+    }
+}
+
+fun getLaunchString(shortcut: Shortcut): String {
+    val androidClients = shortcut.clients.filter { it.platforms.any { it.os == "android" } }
+    return if (androidClients.isEmpty()) {
+        val webClients = shortcut.clients.filter { it.platforms.any { it.type == "web" } }
+        val platform = webClients.first().platforms.find { it.type == "web" }
+        if (platform != null) {
+            urlJoin(BASE_URL, platform.url)
+        } else ""
+    } else {
+        val fDroidClients = androidClients.filter { it.platforms.any { it.storeName == "f-droid" } }
+        if (fDroidClients.isNotEmpty()) {
+            val url = fDroidClients.first().platforms.first { it.storeName == "f-droid" }.url
+            url.split("/").last()
+        } else {
+            val platform = androidClients.first().platforms.find { it.storeName == "google-play" }
+            platform?.url?.split("=")?.last() ?: ""
         }
     }
 }
 
-fun getLaunchString(shortcut: Shortcut, activity: Context): String {
-    val freedomBoxURL = PreferenceManager.getDefaultSharedPreferences(activity).getString(
-            "freedombox_url", "10.42.0.1")
-//    return if false (service.getJSONArray("android-apps").empty())
-//        service.getJSONObject("URL")?.let { jsonObj ->
-//            val protocol = jsonObj.getString("protocol")
-//            val domain = jsonObj.getString("domain").takeIf { it.isNotEmpty() } ?: freedomBoxURL
-//            val port = jsonObj.getString("port")
-//            val path = jsonObj.getString("path")
-//            "$protocol://$domain:$port/$path"
-//        }!!
-//    else {
-//        val apps = service.getJSONArray("android-apps").asList<String>()
-//        apps.find { getLaunchIntent(it, activity.packageManager) != null } ?: apps[0]
-//    }
-    return "com.nutomic.syncthingandroid"
-}
+fun getIntent(url: String, packageManager: PackageManager) =
+        if (url.startsWith("http")) getWebIntent(url) else getAppIntent(url, packageManager)
 
-fun getLaunchIntent(packageName: String, packageManager: PackageManager) =
+fun getAppIntent(packageName: String, packageManager: PackageManager): Intent? =
         packageManager.getLaunchIntentForPackage(packageName)
 
 fun getWebIntent(url: String) = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-
-fun getIntent(url: String, packageManager: PackageManager) =
-        if (url.startsWith("http")) getWebIntent(url) else getLaunchIntent(url, packageManager)
-
