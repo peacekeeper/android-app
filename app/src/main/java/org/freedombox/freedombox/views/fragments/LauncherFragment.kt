@@ -47,12 +47,8 @@ class LauncherFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        //TODO: Use the URL from settings once it is setup
         val currentBox = arguments.getParcelable<ConfigModel>("current_box")
-        Log.d("currentBox", currentBox.toString())
-
         val adapter = GridAdapter(activity!!.applicationContext, imageRenderer, currentBox.domain)
-
         appGrid.adapter = adapter
 
         fun getShortcutsFromResponse(response: String): Shortcuts? {
@@ -62,9 +58,11 @@ class LauncherFragment : BaseFragment() {
             return gson.fromJson(response, Shortcuts::class.java)
         }
 
+        @Suppress("SENSELESS_COMPARISON")
         val onSuccess = fun(response: String) {
             sharedPreferences.edit().putString(APP_RESPONSE, response).apply() // TODO
-            adapter.setData(getShortcutsFromResponse(response)!!.shortcuts)
+            val shortcuts = getShortcutsFromResponse(response)!!.shortcuts
+            adapter.setData(shortcuts.filter { it.clients != null })
         }
 
         val onFailure = fun() {

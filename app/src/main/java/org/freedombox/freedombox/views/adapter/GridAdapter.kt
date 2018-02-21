@@ -19,7 +19,6 @@ package org.freedombox.freedombox.views.adapter
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,8 +50,6 @@ class GridAdapter(val context: Context, val imageRenderer: ImageRenderer, val ba
         )
 
         rowView.appIcon.setOnClickListener { launchApp(shortcut, context, baseUrl)}
-
-        // rowView.cardHolder.setBackgroundColor(Color.parseColor(appDetail["color"].asString))
 
         return rowView
     }
