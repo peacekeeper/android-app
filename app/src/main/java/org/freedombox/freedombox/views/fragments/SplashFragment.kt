@@ -22,7 +22,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.fragment_splash.btnSplashNext
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
 import org.freedombox.freedombox.utils.storage.getSharedPreference
@@ -41,10 +40,8 @@ class SplashFragment : BaseFragment() {
 
         openLauncherIfConfigured()
 
-        btnSplashNext.setOnClickListener {
-            val intent = Intent(activity, DiscoveryActivity::class.java)
-            startActivity(intent)
-        }
+        val intent = Intent(activity, DiscoveryActivity::class.java)
+        startActivity(intent)
     }
 
     private fun openLauncherIfConfigured() {
@@ -66,7 +63,6 @@ class SplashFragment : BaseFragment() {
         fun new(args: Bundle): SplashFragment {
             val fragment = SplashFragment()
             fragment.arguments = args
-
             return fragment
         }
     }
