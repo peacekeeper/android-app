@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_setup.*
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
+import org.freedombox.freedombox.utils.network.wrapHttps
 import org.freedombox.freedombox.utils.storage.getSharedPreference
 import org.freedombox.freedombox.utils.storage.putSharedPreference
 import org.freedombox.freedombox.utils.view.getEnteredText
@@ -38,8 +39,13 @@ class SetupFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val currentBoxName = activity!!.intent.getStringExtra(getString(R.string.current_box))
-        discoveredUrl.setText(currentBoxName)
+        val currentBox = activity!!.intent.getParcelableExtra<ConfigModel>(getString(R.string.current_box))
+
+        currentBox?.let {
+            boxName.setText(it.boxName)
+            discoveredUrl.setText(it.domain)
+            defaultStatus.isChecked = it.isDefault()
+        }
 
         saveConfig.setOnClickListener {
             storeEnteredDetailsInPreference()
@@ -50,12 +56,12 @@ class SetupFragment : BaseFragment() {
 
     private fun storeEnteredDetailsInPreference() {
         val configuredBoxesJSON = getSharedPreference(sharedPreferences,
-            getString(R.string.default_box))
+            getString(R.string.saved_boxes))
 
         val configModel = ConfigModel(
             getEnteredText(boxName),
-            getEnteredText(discoveredUrl),
-            getSwitchStatus(setDefault))
+            wrapHttps(getEnteredText(discoveredUrl)),
+            getSwitchStatus(defaultStatus))
 
         val configuredBoxList = (configuredBoxesJSON?.let {
             val gson = GsonBuilder().setPrettyPrinting().create()
@@ -63,7 +69,7 @@ class SetupFragment : BaseFragment() {
         } ?: listOf()).plus(configModel)
 
         putSharedPreference(sharedPreferences,
-            getString(R.string.default_box),
+            getString(R.string.saved_boxes),
             configuredBoxList)
     }
 

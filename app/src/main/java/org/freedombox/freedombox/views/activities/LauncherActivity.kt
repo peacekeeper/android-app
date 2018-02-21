@@ -23,6 +23,7 @@ import android.view.Menu
 import android.view.MenuItem
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.views.fragments.LauncherFragment
+import org.freedombox.freedombox.views.model.ConfigModel
 
 class LauncherActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +43,8 @@ class LauncherActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         val intent = Intent(this, SetupActivity::class.java)
+        intent.putExtra(getString(R.string.current_box),
+                this.intent.extras.getParcelable<ConfigModel>(getString(R.string.current_box)))
         startActivity(intent)
         return super.onOptionsItemSelected(item)
     }

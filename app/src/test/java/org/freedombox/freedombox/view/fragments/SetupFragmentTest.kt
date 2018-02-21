@@ -49,7 +49,7 @@ class SetupFragmentTest {
         val discoveredUrl = shadowActivity.findViewById(R.id.discoveredUrl)
         Assert.assertNotNull(discoveredUrl)
 
-        val default = shadowActivity.findViewById(R.id.setDefault)
+        val default = shadowActivity.findViewById(R.id.defaultStatus)
         Assert.assertNotNull(default)
 
         val saveConfig = shadowActivity.findViewById(R.id.saveConfig)
@@ -86,7 +86,7 @@ class SetupFragmentTest {
 
         (shadowActivity.findViewById(R.id.boxName) as EditText).setText(boxName)
         (shadowActivity.findViewById(R.id.discoveredUrl) as EditText).setText(domain)
-        (shadowActivity.findViewById(R.id.setDefault) as Switch).isChecked = default
+        (shadowActivity.findViewById(R.id.defaultStatus) as Switch).isChecked = default
 
         shadowActivity.findViewById(R.id.saveConfig).performClick()
         Assert.assertEquals(value, sharedPreferences.getString(key, null))

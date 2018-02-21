@@ -31,6 +31,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_discovery.*
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
+import org.freedombox.freedombox.utils.network.wrapHttps
 import org.freedombox.freedombox.utils.storage.getSharedPreference
 import org.freedombox.freedombox.views.activities.LauncherActivity
 import org.freedombox.freedombox.views.activities.SetupActivity
@@ -73,7 +74,7 @@ class DiscoveryFragment : BaseFragment() {
         nsdManager.discoverServices(SERVICE, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
 
         val configuredBoxesJSON = getSharedPreference(sharedPreferences,
-                getString(R.string.default_box))
+                getString(R.string.saved_boxes))
 
         configuredBoxesJSON?.let {
             configuredBoxSetupList += gson.fromJson<List<ConfigModel>>(configuredBoxesJSON,
@@ -120,8 +121,6 @@ class DiscoveryFragment : BaseFragment() {
             startActivity(intent)
         }
     }
-
-    private fun wrapHttps(url: String) = if(!url.startsWith("http")) "https://" + url else url
 
     companion object {
         fun new(args: Bundle): DiscoveryFragment {

@@ -42,7 +42,7 @@
         android:textColor="@drawable/selector_txt" />
 
     <Switch
-        android:id="@+id/setDefault"
+        android:id="@+id/defaultStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -53,7 +53,7 @@
         android:id="@+id/saveConfig"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/setDefault"
+        android:layout_below="@+id/defaultStatus"
         android:text="@string/save" />
 
 </RelativeLayout>

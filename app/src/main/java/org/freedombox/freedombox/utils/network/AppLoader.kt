@@ -139,3 +139,5 @@ fun getAppIntent(packageName: String, packageManager: PackageManager): Intent? =
         packageManager.getLaunchIntentForPackage(packageName)
 
 fun getWebIntent(url: String) = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+
+fun wrapHttps(url: String) = if(!url.startsWith("http")) "https://" + url else url
