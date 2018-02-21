@@ -36,7 +36,7 @@ import org.robolectric.annotation.Config
 @Config(constants = BuildConfig::class)
 class GridAdapterTest {
     private val applicationContext: Context = application.applicationContext
-    private val gridAdapter = GridAdapter(applicationContext, imageRenderer = ImageRenderer(applicationContext))
+    private val gridAdapter = GridAdapter(applicationContext, imageRenderer = ImageRenderer(applicationContext), baseUrl = "https://localhost")
     private val gson = GsonBuilder().create()
     private var items = mutableListOf<Shortcut>()
     private val shortcut = gson.fromJson("""

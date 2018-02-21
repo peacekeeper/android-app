@@ -34,8 +34,8 @@ class DiscoveryListAdapterTest {
 
     private val applicationContext: Context = RuntimeEnvironment.application.applicationContext
     private lateinit var listAdapter: DiscoveryListAdapter
-    private val box1 = ConfigModel("box1", "alice.freedombox.rocks", "alice", "blah*123", false)
-    private val box2 = ConfigModel("box2", "bob.freedombox.rocks", "bob", "meh@123", false)
+    private val box1 = ConfigModel("box1", "alice.freedombox.rocks", false)
+    private val box2 = ConfigModel("box2", "bob.freedombox.rocks", false)
     private val boxList = listOf<ConfigModel>(box1, box2)
 
     @Before

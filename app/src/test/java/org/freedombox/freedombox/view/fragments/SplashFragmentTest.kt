@@ -50,25 +50,13 @@ class SplashFragmentTest {
     }
 
     @Test
-    fun displayButtonWhenNoBoxConfigured() {
-
-        val activity = Robolectric.setupActivity(MainActivity::class.java)
-        val shadowActvity = Shadows.shadowOf(activity)
-        val buttonView = shadowActvity.findViewById(R.id.btnSplashNext)
-        Assert.assertEquals(View.VISIBLE, buttonView.visibility)
-    }
-
-
-    @Test
     fun navigateToLauncherScreenWhenBoxConfigured() {
 
         val value = """
             [{
 	            "boxName": "box",
 	            "default": true,
-	            "domain": "/10.42.0.1",
-	            "password": "pass",
-	            "username": "user"
+	            "domain": "/10.42.0.1"
             }]
         """
 
@@ -79,17 +67,6 @@ class SplashFragmentTest {
         Assert.assertEquals(expectedIntent.javaClass,
             shadowActvity.nextStartedActivity.javaClass)
 
-    }
-
-    @Test
-    fun navigateToLauncherScreenOnButtonClick() {
-
-        val activity = Robolectric.setupActivity(MainActivity::class.java)
-        val shadowActvity = Shadows.shadowOf(activity)
-        val expectedIntent = Intent(activity, DiscoveryActivity::class.java)
-        shadowActvity.findViewById(R.id.btnSplashNext).performClick()
-        Assert.assertEquals(expectedIntent.javaClass,
-            shadowActvity.nextStartedActivity.javaClass)
     }
 
 }

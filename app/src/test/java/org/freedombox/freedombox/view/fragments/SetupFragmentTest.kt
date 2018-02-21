@@ -49,12 +49,6 @@ class SetupFragmentTest {
         val discoveredUrl = shadowActivity.findViewById(R.id.discoveredUrl)
         Assert.assertNotNull(discoveredUrl)
 
-        val username = shadowActivity.findViewById(R.id.username)
-        Assert.assertNotNull(username)
-
-        val password = shadowActivity.findViewById(R.id.password)
-        Assert.assertNotNull(password)
-
         val default = shadowActivity.findViewById(R.id.setDefault)
         Assert.assertNotNull(default)
 
@@ -80,13 +74,11 @@ class SetupFragmentTest {
 
         val boxName = "freedomBox"
         val domain = "domain"
-        val username = "username"
-        val password = "password"
         val default = false
 
         val key = "default_box"
         val value = """
-            [{"boxName":"$boxName","domain":"$domain","username":"$username","password":"$password","default":false}]
+            [{"boxName":"$boxName","domain":"$domain","default":false}]
         """.trim()
 
         val activity = Robolectric.setupActivity(SetupActivity::class.java)
@@ -94,8 +86,6 @@ class SetupFragmentTest {
 
         (shadowActivity.findViewById(R.id.boxName) as EditText).setText(boxName)
         (shadowActivity.findViewById(R.id.discoveredUrl) as EditText).setText(domain)
-        (shadowActivity.findViewById(R.id.username) as EditText).setText(username)
-        (shadowActivity.findViewById(R.id.password) as EditText).setText(password)
         (shadowActivity.findViewById(R.id.setDefault) as Switch).isChecked = default
 
         shadowActivity.findViewById(R.id.saveConfig).performClick()
