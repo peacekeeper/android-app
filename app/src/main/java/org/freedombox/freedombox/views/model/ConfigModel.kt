@@ -22,12 +22,8 @@ import android.os.Parcelable
 
 data class ConfigModel(val boxName: String,
                        val domain: String,
-                       private val username: String,
-                       private val password: String,
                        private val default: Boolean) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readByte() != 0.toByte())
@@ -35,8 +31,6 @@ data class ConfigModel(val boxName: String,
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(boxName)
         parcel.writeString(domain)
-        parcel.writeString(username)
-        parcel.writeString(password)
         parcel.writeByte(if (default) 1 else 0)
     }
 
@@ -48,3 +42,4 @@ data class ConfigModel(val boxName: String,
         override fun newArray(size: Int) = arrayOfNulls<ConfigModel>(size)
     }
 }
+

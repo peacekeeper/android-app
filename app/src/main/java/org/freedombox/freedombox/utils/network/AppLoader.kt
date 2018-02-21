@@ -28,9 +28,11 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.gson.GsonBuilder
 import org.freedombox.freedombox.BASE_URL
 import org.freedombox.freedombox.models.Platform
 import org.freedombox.freedombox.models.Shortcut
+import org.freedombox.freedombox.views.model.ConfigModel
 
 
 fun getApps(context: Context, uri: String,
@@ -55,8 +57,11 @@ fun urlJoin(vararg urls: String): String {
     return urls.map { it.trim('/') }.joinToString(separator = "/")
 }
 
-fun launchApp(shortcut: Shortcut, context: Context) {
-    val appName = getLaunchString(shortcut, context.packageManager)
+
+fun apiUrl(baseUrl: String = BASE_URL) = urlJoin(baseUrl, "/plinth/api/1")
+
+fun launchApp(shortcut: Shortcut, context: Context, baseUrl: String = BASE_URL) {
+    val appName = getLaunchString(shortcut, context.packageManager, baseUrl)
     if (appName.isNotBlank()) {
         val intent = getIntent(appName, context.packageManager)
         if (intent != null) {
@@ -85,13 +90,13 @@ fun launchApp(shortcut: Shortcut, context: Context) {
  *   2. F-Droid app
  *   3. Google Play app
  */
-fun getLaunchString(shortcut: Shortcut, packageManager: PackageManager): String {
+fun getLaunchString(shortcut: Shortcut, packageManager: PackageManager, baseUrl: String = BASE_URL): String {
     val androidClients = shortcut.clients.filter { it.platforms.any { it.os == "android" } }
     return if (androidClients.isEmpty()) {
         val webClients = shortcut.clients.filter { it.platforms.any { it.type == "web" } }
         val platform = webClients.first().platforms.find { it.type == "web" }
         if (platform != null) {
-            urlJoin(BASE_URL, platform.url)
+            urlJoin(baseUrl, platform.url)
         } else ""
     } else {
         val installedApps = findInstalledApps(getAndroidPackageNames(shortcut), packageManager)

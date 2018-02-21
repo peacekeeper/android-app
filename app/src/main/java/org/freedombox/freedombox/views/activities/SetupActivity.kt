@@ -19,7 +19,6 @@ package org.freedombox.freedombox.views.activities
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.views.fragments.SetupFragment
 

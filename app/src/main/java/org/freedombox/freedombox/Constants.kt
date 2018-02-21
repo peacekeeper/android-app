@@ -17,9 +17,6 @@
 
 package org.freedombox.freedombox
 
-import org.freedombox.freedombox.utils.network.urlJoin
-
 const val BASE_URL = "http://10.42.0.1"
-val API_URL = urlJoin(BASE_URL, "/plinth/api/1")
 const val SERVICES_URL = "shortcuts"
 const val APP_RESPONSE = "appResponse"

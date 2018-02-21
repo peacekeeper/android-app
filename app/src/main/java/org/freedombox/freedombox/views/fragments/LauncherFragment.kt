@@ -23,16 +23,17 @@ import android.util.Log
 import android.view.View
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.fragment_launcher.*
-import org.freedombox.freedombox.API_URL
 import org.freedombox.freedombox.APP_RESPONSE
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.SERVICES_URL
 import org.freedombox.freedombox.components.AppComponent
 import org.freedombox.freedombox.models.Shortcuts
 import org.freedombox.freedombox.utils.ImageRenderer
+import org.freedombox.freedombox.utils.network.apiUrl
 import org.freedombox.freedombox.utils.network.getApps
 import org.freedombox.freedombox.utils.network.urlJoin
 import org.freedombox.freedombox.views.adapter.GridAdapter
+import org.freedombox.freedombox.views.model.ConfigModel
 import javax.inject.Inject
 
 class LauncherFragment : BaseFragment() {
@@ -46,7 +47,11 @@ class LauncherFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val adapter = GridAdapter(activity!!.applicationContext, imageRenderer)
+        //TODO: Use the URL from settings once it is setup
+        val currentBox = arguments.getParcelable<ConfigModel>("current_box")
+        Log.d("currentBox", currentBox.toString())
+
+        val adapter = GridAdapter(activity!!.applicationContext, imageRenderer, currentBox.domain)
 
         appGrid.adapter = adapter
 
@@ -72,17 +77,14 @@ class LauncherFragment : BaseFragment() {
             }
         }
 
-        //TODO: Use the URL from settings once it is setup
-        val url = urlJoin(API_URL, SERVICES_URL)
-
-        getApps(context!!, url, onSuccess, onFailure)
+        val servicesUrl = urlJoin(apiUrl(currentBox.domain), SERVICES_URL)
+        getApps(context!!, servicesUrl, onSuccess, onFailure)
     }
 
     companion object {
-        fun new(args: Bundle): LauncherFragment {
+        fun new(savedInstanceState: Bundle): LauncherFragment {
             val fragment = LauncherFragment()
-            fragment.arguments = args
-
+            fragment.arguments = savedInstanceState
             return fragment
         }
     }

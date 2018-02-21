@@ -31,13 +31,17 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun loadFragment(fragmentContainerId: Int, fragment: Fragment, addToBackStack: Boolean = false) {
         val transaction = this.supportFragmentManager.beginTransaction()
+        transaction.remove(fragment)
+        transaction.commit()
+        this.supportFragmentManager.executePendingTransactions()
 
-        transaction.replace(fragmentContainerId, fragment, fragment.javaClass.name)
+        val newTransaction = this.supportFragmentManager.beginTransaction()
+        newTransaction.replace(fragmentContainerId, fragment, fragment.javaClass.name)
 
         if (addToBackStack) {
             transaction.addToBackStack(fragment.javaClass.name)
         }
 
-        transaction.commit()
+        newTransaction.commit()
     }
 }

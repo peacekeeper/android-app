@@ -35,29 +35,10 @@
         android:id="@+id/discoveredUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
+        android:layout_below="@+id/boxName"
         android:layout_marginBottom="10dp"
         android:inputType="textUri"
         android:hint="@string/discovered_url"
-        android:textColor="@drawable/selector_txt" />
-
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/boxName"
-        android:layout_marginBottom="10dp"
-        android:hint="@string/username"
-        android:textColor="@drawable/selector_txt" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/username"
-        android:layout_marginBottom="10dp"
-        android:hint="@string/password"
-        android:inputType="textPassword"
         android:textColor="@drawable/selector_txt" />
 
     <Switch

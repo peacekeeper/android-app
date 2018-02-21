@@ -33,6 +33,7 @@ import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
 import org.freedombox.freedombox.utils.storage.getSharedPreference
 import org.freedombox.freedombox.views.activities.LauncherActivity
+import org.freedombox.freedombox.views.activities.SetupActivity
 import org.freedombox.freedombox.views.adapter.DiscoveryListAdapter
 import org.freedombox.freedombox.views.adapter.DiscoveryListAdapter.OnItemClickListener
 import org.freedombox.freedombox.views.model.ConfigModel
@@ -89,7 +90,9 @@ class DiscoveryFragment : BaseFragment() {
                     object : OnItemClickListener {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(activity, LauncherActivity::class.java)
-                            intent.putExtra(getString(R.string.current_box), configuredBoxList[position])
+                            val configuredBox = configuredBoxList[position]
+                            intent.putExtra(getString(R.string.current_box),
+                                    configuredBox.copy(domain = wrapHttps(configuredBox.domain)))
                             startActivity(intent)
                         }
                     })
@@ -103,14 +106,22 @@ class DiscoveryFragment : BaseFragment() {
                 object : OnItemClickListener {
                     override fun onItemClick(position: Int) {
                         val intent = Intent(activity, LauncherActivity::class.java)
+                        val discoveredBox = discoveredBoxList[position]
                         intent.putExtra(getString(R.string.current_box),
-                                discoveredBoxList[position])
+                                discoveredBox.copy(domain = wrapHttps(discoveredBox.domain.trim('/'))))
                         startActivity(intent)
                     }
                 })
         discoveredListView.layoutManager = LinearLayoutManager(activity)
         discoveredListView.adapter = discoveredBoxListAdapter
+
+        fab.setOnClickListener {
+            val intent = Intent(activity, SetupActivity::class.java)
+            startActivity(intent)
+        }
     }
+
+    private fun wrapHttps(url: String) = if(!url.startsWith("http")) "https://" + url else url
 
     companion object {
         fun new(args: Bundle): DiscoveryFragment {
@@ -147,7 +158,7 @@ class DiscoveryFragment : BaseFragment() {
             }
             if (portConfigured.isEmpty()) {
                 discoveredBoxList.add(ConfigModel(serviceInfo.host.toString(),
-                        serviceInfo.host.toString(), "", "", false))
+                        serviceInfo.host.toString(), false))
                 Log.d(TAG, discoveredBoxList[0].boxName)
             }
             activity!!.runOnUiThread {

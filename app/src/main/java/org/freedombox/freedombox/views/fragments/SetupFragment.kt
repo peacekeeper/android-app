@@ -55,8 +55,6 @@ class SetupFragment : BaseFragment() {
         val configModel = ConfigModel(
             getEnteredText(boxName),
             getEnteredText(discoveredUrl),
-            getEnteredText(username),
-            getEnteredText(password),
             getSwitchStatus(setDefault))
 
         val configuredBoxList = (configuredBoxesJSON?.let {

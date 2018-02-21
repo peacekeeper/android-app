@@ -37,11 +37,18 @@ class SplashFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        resume()
+    }
 
+    private fun resume() {
         openLauncherIfConfigured()
-
         val intent = Intent(activity, DiscoveryActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        resume()
     }
 
     private fun openLauncherIfConfigured() {

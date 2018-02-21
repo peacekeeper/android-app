@@ -25,14 +25,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.app_container.view.*
-import org.freedombox.freedombox.BASE_URL
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.models.Shortcut
 import org.freedombox.freedombox.utils.ImageRenderer
 import org.freedombox.freedombox.utils.network.launchApp
 import org.freedombox.freedombox.utils.network.urlJoin
 
-class GridAdapter(val context: Context, val imageRenderer: ImageRenderer) : BaseAdapter() {
+class GridAdapter(val context: Context, val imageRenderer: ImageRenderer, val baseUrl: String) : BaseAdapter() {
 
     private var items = listOf<Shortcut>()
 
@@ -44,14 +43,14 @@ class GridAdapter(val context: Context, val imageRenderer: ImageRenderer) : Base
 
         rowView.appName.text = shortcut.name
         rowView.appDescription.text = shortcut.shortDescription
-        Log.d("GridAdapter:", shortcut.toString())
-        val url = urlJoin(BASE_URL, shortcut.iconUrl)
+        val iconUrl = urlJoin(baseUrl, shortcut.iconUrl)
+
         imageRenderer.loadImageFromURL(
-                Uri.parse(url),
+                Uri.parse(iconUrl),
                 rowView.appIcon
         )
 
-        rowView.appIcon.setOnClickListener { launchApp(shortcut, context)}
+        rowView.appIcon.setOnClickListener { launchApp(shortcut, context, baseUrl)}
 
         // rowView.cardHolder.setBackgroundColor(Color.parseColor(appDetail["color"].asString))
 

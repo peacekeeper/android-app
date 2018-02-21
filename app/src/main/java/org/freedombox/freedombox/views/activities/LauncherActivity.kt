@@ -28,7 +28,11 @@ class LauncherActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        loadFragment(R.id.rootLayout, LauncherFragment.new(savedInstanceState ?: Bundle()))
+        val fragment = LauncherFragment.new(savedInstanceState ?: Bundle())
+        fragment.arguments = intent.extras
+        supportFragmentManager.beginTransaction().add(android.R.id.content, fragment).commit()
+
+        loadFragment(R.id.rootLayout, fragment)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
