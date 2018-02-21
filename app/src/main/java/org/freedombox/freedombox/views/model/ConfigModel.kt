@@ -41,5 +41,7 @@ data class ConfigModel(val boxName: String,
 
         override fun newArray(size: Int) = arrayOfNulls<ConfigModel>(size)
     }
+
+    fun isDefault() = this.default
 }
 

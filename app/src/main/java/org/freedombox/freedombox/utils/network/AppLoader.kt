@@ -28,11 +28,9 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.google.gson.GsonBuilder
 import org.freedombox.freedombox.BASE_URL
 import org.freedombox.freedombox.models.Platform
 import org.freedombox.freedombox.models.Shortcut
-import org.freedombox.freedombox.views.model.ConfigModel
 
 
 fun getApps(context: Context, uri: String,

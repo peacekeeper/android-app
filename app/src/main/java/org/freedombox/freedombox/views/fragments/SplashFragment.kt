@@ -21,7 +21,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
 import org.freedombox.freedombox.utils.storage.getSharedPreference
@@ -37,11 +36,10 @@ class SplashFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        resume()
+        if(openLauncherIfConfigured()) resume()
     }
 
     private fun resume() {
-        openLauncherIfConfigured()
         val intent = Intent(activity, DiscoveryActivity::class.java)
         startActivity(intent)
     }
@@ -51,19 +49,20 @@ class SplashFragment : BaseFragment() {
         resume()
     }
 
-    private fun openLauncherIfConfigured() {
+    private fun openLauncherIfConfigured(): Boolean {
         val configuredBoxesJSON = getSharedPreference(sharedPreferences,
                 getString(R.string.default_box))
 
         configuredBoxesJSON?.let {
             val gson = GsonBuilder().setPrettyPrinting().create()
-            val configuredBoxList = gson.fromJson<ArrayList<ConfigModel>>(it,
-                    object : TypeToken<List<ConfigModel>>() {}.type)
+            val configuredBoxList = gson.fromJson(it, Array<ConfigModel>::class.java)
             val intent = Intent(activity, LauncherActivity::class.java)
-            intent.putParcelableArrayListExtra(getString(R.string.current_box), configuredBoxList)
+            intent.putExtra(getString(R.string.current_box), configuredBoxList.find { it.isDefault() })
             startActivity(intent)
+            return true
         }
 
+        return false
     }
 
     companion object {
