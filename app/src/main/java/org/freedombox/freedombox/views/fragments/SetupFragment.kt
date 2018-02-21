@@ -63,14 +63,14 @@ class SetupFragment : BaseFragment() {
             wrapHttps(getEnteredText(discoveredUrl)),
             getSwitchStatus(defaultStatus))
 
-        val configuredBoxList = (configuredBoxesJSON?.let {
+        val configuredBoxMap = (configuredBoxesJSON?.let {
             val gson = GsonBuilder().setPrettyPrinting().create()
-            gson.fromJson<List<ConfigModel>>(it, object : TypeToken<List<ConfigModel>>() {}.type)
-        } ?: listOf()).plus(configModel)
+            gson.fromJson<Map<String, ConfigModel>>(it, object : TypeToken<Map<String, ConfigModel>>() {}.type)
+        } ?: mapOf()).plus(Pair(configModel.boxName, configModel))
 
         putSharedPreference(sharedPreferences,
             getString(R.string.saved_boxes),
-            configuredBoxList)
+            configuredBoxMap)
     }
 
     override fun getLayoutId() = R.layout.fragment_setup

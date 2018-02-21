@@ -77,8 +77,9 @@ class DiscoveryFragment : BaseFragment() {
                 getString(R.string.saved_boxes))
 
         configuredBoxesJSON?.let {
-            configuredBoxSetupList += gson.fromJson<List<ConfigModel>>(configuredBoxesJSON,
-                    object : TypeToken<List<ConfigModel>>() {}.type)
+            configuredBoxSetupList += gson.fromJson<Map<String, ConfigModel>>(configuredBoxesJSON,
+                    object : TypeToken<Map<String, ConfigModel>>() {}.type).values
+
             for (configModel in configuredBoxSetupList) {
                 configuredBoxList += configModel
             }

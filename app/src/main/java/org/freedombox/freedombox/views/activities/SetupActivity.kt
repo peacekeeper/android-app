@@ -18,7 +18,6 @@
 package org.freedombox.freedombox.views.activities
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.views.fragments.SetupFragment
 
@@ -28,6 +27,5 @@ class SetupActivity : BaseActivity() {
         supportActionBar?.title = getString(R.string.setup)
 
         loadFragment(R.id.rootLayout, SetupFragment.new(savedInstanceState ?: Bundle()))
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
     }
 }

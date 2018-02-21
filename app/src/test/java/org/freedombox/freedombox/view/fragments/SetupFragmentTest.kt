@@ -18,11 +18,15 @@
 package org.freedombox.freedombox.view.fragments
 
 import android.preference.PreferenceManager
+import android.util.Log
 import android.widget.EditText
 import android.widget.Switch
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import org.freedombox.freedombox.BuildConfig
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.views.activities.SetupActivity
+import org.freedombox.freedombox.views.model.ConfigModel
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -76,9 +80,8 @@ class SetupFragmentTest {
         val domain = "domain"
         val default = false
 
-        val key = "default_box"
         val value = """
-            [{"boxName":"$boxName","domain":"$domain","default":false}]
+            {"$boxName":{"boxName":"$boxName","domain":"https://$domain","default":false}}
         """.trim()
 
         val activity = Robolectric.setupActivity(SetupActivity::class.java)
@@ -89,6 +92,8 @@ class SetupFragmentTest {
         (shadowActivity.findViewById(R.id.defaultStatus) as Switch).isChecked = default
 
         shadowActivity.findViewById(R.id.saveConfig).performClick()
-        Assert.assertEquals(value, sharedPreferences.getString(key, null))
+
+        val configuredBoxesJSON = sharedPreferences.getString("saved_boxes", null)
+        Assert.assertEquals(value, configuredBoxesJSON)
     }
 }

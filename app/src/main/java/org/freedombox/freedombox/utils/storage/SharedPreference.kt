@@ -32,3 +32,12 @@ fun putSharedPreference(sharedPreferences: SharedPreferences,
         Gson().toJson(listItem))
     sharedPreferencesEditor.apply()
 }
+
+fun putSharedPreference(sharedPreferences: SharedPreferences,
+                        key: String,
+                        listItem: Map<String, ConfigModel>) {
+    val sharedPreferencesEditor = sharedPreferences.edit()
+    sharedPreferencesEditor.putString(key,
+            Gson().toJson(listItem))
+    sharedPreferencesEditor.apply()
+}
