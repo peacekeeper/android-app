@@ -60,8 +60,9 @@ class GridAdapter(val context: Context, val imageRenderer: ImageRenderer, val ba
 
     override fun getCount() = items.size
 
+    @Suppress("SENSELESS_COMPARISON")
     fun setData(shortcuts: List<Shortcut>) {
-        items = shortcuts
+        items = shortcuts.filter{ it.clients != null}
 
         notifyDataSetChanged()
     }

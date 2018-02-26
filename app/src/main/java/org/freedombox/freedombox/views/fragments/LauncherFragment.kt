@@ -22,6 +22,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.discovery_listview.*
 import kotlinx.android.synthetic.main.fragment_launcher.*
 import org.freedombox.freedombox.APP_RESPONSE
 import org.freedombox.freedombox.R
@@ -32,6 +34,7 @@ import org.freedombox.freedombox.utils.ImageRenderer
 import org.freedombox.freedombox.utils.network.apiUrl
 import org.freedombox.freedombox.utils.network.getApps
 import org.freedombox.freedombox.utils.network.urlJoin
+import org.freedombox.freedombox.utils.storage.getSharedPreference
 import org.freedombox.freedombox.views.adapter.GridAdapter
 import org.freedombox.freedombox.views.model.ConfigModel
 import javax.inject.Inject
@@ -58,18 +61,29 @@ class LauncherFragment : BaseFragment() {
             return gson.fromJson(response, Shortcuts::class.java)
         }
 
-        @Suppress("SENSELESS_COMPARISON")
         val onSuccess = fun(response: String) {
-            sharedPreferences.edit().putString(APP_RESPONSE, response).apply() // TODO
+            val appResponse = getSharedPreference(sharedPreferences, APP_RESPONSE)
+            val gson = GsonBuilder().create()
+
+            val updatedResponse = (appResponse?.let {
+                gson.fromJson<Map<String, Shortcuts>>(it,
+                        object : TypeToken<Map<String, Shortcuts>>() {}.type)
+            } ?: mapOf()).plus(Pair(currentBox.boxName, getShortcutsFromResponse(response)))
+
+            sharedPreferences.edit().putString(APP_RESPONSE, gson.toJson(updatedResponse)).apply()
             val shortcuts = getShortcutsFromResponse(response)!!.shortcuts
-            adapter.setData(shortcuts.filter { it.clients != null })
+            adapter.setData(shortcuts)
         }
 
         val onFailure = fun() {
-            if (sharedPreferences.contains(APP_RESPONSE)) {
-                val old_shortcuts = sharedPreferences.getString(APP_RESPONSE, "[]")
+            val responses = getSharedPreference(sharedPreferences, APP_RESPONSE)
 
-                adapter.setData(getShortcutsFromResponse(old_shortcuts)!!.shortcuts)
+            val gson = GsonBuilder().create()
+            val appResponseMap = gson.fromJson<Map<String, Shortcuts>>(responses,
+                    object: TypeToken<Map<String, Shortcuts>>() {}.type)
+
+            if (appResponseMap.containsKey(currentBox.boxName)) {
+                adapter.setData(appResponseMap[currentBox.boxName]!!.shortcuts)
             } else {
                 appsNotAvailable.visibility = View.VISIBLE
             }
