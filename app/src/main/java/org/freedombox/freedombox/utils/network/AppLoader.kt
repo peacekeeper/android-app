@@ -31,11 +31,73 @@ import com.android.volley.toolbox.Volley
 import org.freedombox.freedombox.BASE_URL
 import org.freedombox.freedombox.models.Platform
 import org.freedombox.freedombox.models.Shortcut
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.*
+import java.security.cert.CertificateException
+import java.util.regex.Pattern
+
+
+val defaultHostNameVerifier = HttpsURLConnection.getDefaultHostnameVerifier()
+val defaultSSLSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory()
+
+fun trustValidCert() {
+    HttpsURLConnection.setDefaultHostnameVerifier(defaultHostNameVerifier)
+    HttpsURLConnection.setDefaultSSLSocketFactory(defaultSSLSocketFactory)
+}
+
+fun trustAnyCert() {
+    try {
+        HttpsURLConnection.setDefaultHostnameVerifier { _, _ -> true }
+        val context = SSLContext.getInstance("TLS")
+        context.init(null, arrayOf<X509TrustManager>(object : X509TrustManager {
+            override fun getAcceptedIssuers(): Array<X509Certificate?> = arrayOfNulls<X509Certificate?>(0)
+
+            @Throws(CertificateException::class)
+            override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
+            }
+
+            @Throws(CertificateException::class)
+            override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {
+            }
+        }), SecureRandom())
+        HttpsURLConnection.setDefaultSSLSocketFactory(
+                context.socketFactory)
+    } catch (e: Exception) { // should never happen
+        e.printStackTrace()
+    }
+}
+
+
+abstract class IpAddressValidator(val regex: String) {
+
+    val pattern = Pattern.compile(regex)
+
+    fun isValid(ip: String): Boolean {
+        val matcher = pattern.matcher(ip)
+        return matcher.find()
+    }
+}
+
+object Ipv4AddressValidator : IpAddressValidator(
+        regex = """\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b"""
+)
+
+object Ipv6AddressValidator : IpAddressValidator(
+        regex = """(?<![:.\w])(?:[A-F0-9]{1,4}:){7}[A-F0-9]{1,4}(?![:.\w])"""
+)
 
 
 fun getApps(context: Context, uri: String,
             onSuccess: (String) -> Unit,
             onFailure: () -> Unit) {
+
+    // Trust certificates of the discovered boxes on the local network
+    if (Ipv4AddressValidator.isValid(uri) || Ipv6AddressValidator.isValid(uri)) {
+        trustAnyCert()
+    } else {
+        trustValidCert()
+    }
 
     val requestQueue = Volley.newRequestQueue(context)
 
@@ -140,4 +202,4 @@ fun getAppIntent(packageName: String, packageManager: PackageManager): Intent? =
 
 fun getWebIntent(url: String) = Intent(Intent.ACTION_VIEW, Uri.parse(url))
 
-fun wrapHttps(url: String) = if(!url.startsWith("http")) "https://" + url else url
+fun wrapHttps(url: String) = if (!url.startsWith("http")) "https://" + url else url
