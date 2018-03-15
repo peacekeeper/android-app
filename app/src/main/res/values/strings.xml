@@ -22,4 +22,5 @@
     <string name="application_icon">Application Icon</string>
     <string name="information">Information</string>
     <string name="installation_status">Installation Status</string>
+    <string name="launch">Launch</string>
 </resources>

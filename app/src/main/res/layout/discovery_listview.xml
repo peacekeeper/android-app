@@ -18,19 +18,20 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     tools:background="@android:color/holo_blue_light">
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/box_icon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:contentDescription="@string/application_icon"
         android:padding="18dp"
-        android:src="@drawable/ic_freedombox_grey" />
+        app:srcCompat="@drawable/ic_freedombox_grey" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -71,7 +72,7 @@
             android:layout_below="@+id/boxDetailsLayout"
             android:background="@android:color/darker_gray" />
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/arrowImageView"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -82,6 +83,7 @@
             android:layout_marginRight="20dp"
             android:padding="5dp"
             android:rotation="180"
-            android:src="@drawable/ic_left_arrow_black" />
+            app:srcCompat="@drawable/ic_left_arrow_black"
+            android:contentDescription="@string/launch" />
     </RelativeLayout>
 </LinearLayout>

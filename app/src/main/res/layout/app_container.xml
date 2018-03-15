@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/appIcon"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
@@ -85,7 +85,7 @@
 
             </RelativeLayout>
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/infoImageView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"

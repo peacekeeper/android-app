@@ -19,6 +19,7 @@ package org.freedombox.freedombox.views.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -35,7 +36,7 @@ class DiscoveryListAdapter(private val context: Context,
 
     override fun onBindViewHolder(holder: DiscoveryListItemViewHolder, position: Int) {
         holder.let {
-            holder?.updateView(boxList[position])
+            holder.updateView(boxList[position])
         }
     }
 
@@ -70,7 +71,7 @@ class DiscoveryListAdapter(private val context: Context,
             boxNameTextView.text = box.boxName
             portNumberTextView.text = box.domain +"/"+ "80"
             if (isConfigured) {
-                boxIcon.setImageResource(R.drawable.ic_freedombox_blue)
+                boxIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_freedombox_blue))
             }
             if (boxList.size == 1) {
                 borderBottom.visibility = View.INVISIBLE
