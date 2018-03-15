@@ -78,14 +78,16 @@ class LauncherFragment : BaseFragment() {
         val onFailure = fun() {
             val responses = getSharedPreference(sharedPreferences, APP_RESPONSE)
 
-            val gson = GsonBuilder().create()
-            val appResponseMap = gson.fromJson<Map<String, Shortcuts>>(responses,
-                    object: TypeToken<Map<String, Shortcuts>>() {}.type)
-
-            if (appResponseMap.containsKey(currentBox.boxName)) {
-                adapter.setData(appResponseMap[currentBox.boxName]!!.shortcuts)
-            } else {
+            if (responses?.isNullOrBlank() ?: true) {
                 appsNotAvailable.visibility = View.VISIBLE
+            }
+            else {
+                val gson = GsonBuilder().create()
+                val appResponseMap = gson.fromJson<Map<String, Shortcuts>>(responses,
+                        object: TypeToken<Map<String, Shortcuts>>() {}.type)
+
+                if (appResponseMap.containsKey(currentBox.boxName))
+                    adapter.setData(appResponseMap[currentBox.boxName]!!.shortcuts)
             }
         }
 

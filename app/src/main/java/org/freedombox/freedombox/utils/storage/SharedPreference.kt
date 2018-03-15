@@ -21,8 +21,8 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import org.freedombox.freedombox.views.model.ConfigModel
 
-fun getSharedPreference(sharedPreferences: SharedPreferences, key: String)
-    = sharedPreferences.getString(key, null)
+fun getSharedPreference(sharedPreferences: SharedPreferences, key: String): String? =
+        sharedPreferences.getString(key, null)
 
 fun putSharedPreference(sharedPreferences: SharedPreferences,
                         key: String,
