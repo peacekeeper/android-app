@@ -23,7 +23,6 @@ import android.util.Log
 import android.view.View
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.discovery_listview.*
 import kotlinx.android.synthetic.main.fragment_launcher.*
 import org.freedombox.freedombox.APP_RESPONSE
 import org.freedombox.freedombox.R
@@ -50,7 +49,7 @@ class LauncherFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val currentBox = arguments.getParcelable<ConfigModel>("current_box")
+        val currentBox = arguments!!.getParcelable<ConfigModel>("current_box")
         val adapter = GridAdapter(activity!!.applicationContext, imageRenderer, currentBox.domain)
         appGrid.adapter = adapter
 

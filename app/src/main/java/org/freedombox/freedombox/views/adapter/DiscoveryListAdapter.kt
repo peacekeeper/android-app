@@ -33,13 +33,13 @@ class DiscoveryListAdapter(private val context: Context,
                            private val isConfigured: Boolean,
                            private val itemClickListener: DiscoveryListAdapter.OnItemClickListener) : RecyclerView.Adapter<DiscoveryListAdapter.DiscoveryListItemViewHolder>() {
 
-    override fun onBindViewHolder(holder: DiscoveryListItemViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: DiscoveryListItemViewHolder, position: Int) {
         holder.let {
             holder?.updateView(boxList[position])
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DiscoveryListItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoveryListItemViewHolder {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.discovery_listview, null)
         return DiscoveryListItemViewHolder(view)
