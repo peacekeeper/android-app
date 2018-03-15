@@ -125,12 +125,15 @@ fun launchApp(shortcut: Shortcut, context: Context, baseUrl: String = BASE_URL) 
     if (appName.isNotBlank()) {
         val intent = getIntent(appName, context.packageManager)
         if (intent != null) {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
         } else {
             try {
                 // Take to page on the app store
-                context.startActivity(Intent(Intent.ACTION_VIEW,
-                        Uri.parse("market://details?id=$appName")))
+                val appStoreIntent = Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=$appName"))
+                appStoreIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(appStoreIntent)
             } catch (ex: ActivityNotFoundException) {
                 // Case for devices with no app store apps installed
                 Log.e("ERROR", ex.message)

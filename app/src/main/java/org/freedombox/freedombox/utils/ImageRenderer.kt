@@ -20,6 +20,7 @@ package org.freedombox.freedombox.utils
 import android.content.Context
 import android.graphics.drawable.PictureDrawable
 import android.net.Uri
+import android.support.v7.widget.AppCompatImageView
 import android.widget.ImageView
 import com.bumptech.glide.GenericRequestBuilder
 import com.bumptech.glide.Glide
@@ -52,7 +53,7 @@ class ImageRenderer(val context: Context) {
                 .into(imageView)
     }
 
-    fun loadImageFromURL(url: Uri, imageView: ImageView) {
+    fun loadImageFromURL(url: Uri, imageView: AppCompatImageView) {
         Glide.with(context)
                 .load(url)
                 .error(R.drawable.ic_freedombox_blue)
