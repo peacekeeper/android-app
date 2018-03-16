@@ -80,7 +80,7 @@ class LauncherFragment : BaseFragment() {
         val onFailure = fun() {
             val responses = getSharedPreference(sharedPreferences, APP_RESPONSE)
 
-            if (responses?.isNullOrBlank() ?: true) {
+            if (responses?.isBlank() ?: true) {
                 appsNotAvailable.visibility = View.VISIBLE
             }
             else {

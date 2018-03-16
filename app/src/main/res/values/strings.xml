@@ -5,8 +5,8 @@
     <string name="msg_apps_not_available">Apps are not available. Please check network.</string>
     <string name="discovered">Discovered</string>
     <string name="configured">Configured</string>
-    <string name="servers">Servers</string>
-    <string name="box_name">Box Name</string>
+    <string name="servers">FreedomBox Servers</string>
+    <string name="box_name">FreedomBox Name</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="discovered_url">Discovered URL</string>

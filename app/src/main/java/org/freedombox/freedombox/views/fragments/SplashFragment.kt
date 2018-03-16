@@ -20,7 +20,9 @@ package org.freedombox.freedombox.views.fragments
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
 import org.freedombox.freedombox.utils.storage.getSharedPreference
@@ -36,33 +38,27 @@ class SplashFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if(openLauncherIfConfigured()) resume()
-    }
-
-    private fun resume() {
-        val intent = Intent(activity, DiscoveryActivity::class.java)
-        startActivity(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        resume()
-    }
-
-    private fun openLauncherIfConfigured(): Boolean {
-        val configuredBoxesJSON = getSharedPreference(sharedPreferences,
-                getString(R.string.default_box))
-
-        configuredBoxesJSON?.let {
-            val gson = GsonBuilder().setPrettyPrinting().create()
-            val configuredBoxList = gson.fromJson(it, Array<ConfigModel>::class.java)
+        val intent = if(getDefaultBox() != null) {
             val intent = Intent(activity, LauncherActivity::class.java)
-            intent.putExtra(getString(R.string.current_box), configuredBoxList.find { it.isDefault() })
-            startActivity(intent)
-            return true
+            intent.putExtra(getString(R.string.current_box), getDefaultBox())
+            intent
+        } else {
+            Intent(activity, DiscoveryActivity::class.java)
+        }
+        Handler().postDelayed({ startActivity(intent) }, 1000)
+    }
+
+    private fun getDefaultBox(): ConfigModel? {
+        val configuredBoxesJSON = getSharedPreference(sharedPreferences,
+                getString(R.string.saved_boxes))
+
+        return if(configuredBoxesJSON?.isBlank() ?: true) null else {
+            val gson = GsonBuilder().setPrettyPrinting().create()
+            val configuredBoxMap = gson.fromJson<Map<String, ConfigModel>>(configuredBoxesJSON,
+                    object : TypeToken<Map<String, ConfigModel>>() {}.type)
+            configuredBoxMap.entries.find { it.value.isDefault() }?.value
         }
 
-        return false
     }
 
     companion object {
