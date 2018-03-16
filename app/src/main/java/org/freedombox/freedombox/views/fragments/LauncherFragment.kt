@@ -19,6 +19,7 @@ package org.freedombox.freedombox.views.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
 import android.view.View
 import com.google.gson.GsonBuilder
@@ -43,6 +44,8 @@ class LauncherFragment : BaseFragment() {
     @Inject lateinit var imageRenderer: ImageRenderer
 
     @Inject lateinit var sharedPreferences: SharedPreferences
+
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun getLayoutId() = R.layout.fragment_launcher
 
@@ -92,6 +95,12 @@ class LauncherFragment : BaseFragment() {
 
         val servicesUrl = urlJoin(apiUrl(currentBox.domain), SERVICES_URL)
         getApps(context!!, servicesUrl, onSuccess, onFailure)
+
+        swipeRefreshLayout = view!!.findViewById(R.id.launcherSwipeRefresh)
+        swipeRefreshLayout.setOnRefreshListener {
+            getApps(context!!, servicesUrl, onSuccess, onFailure)
+            swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     companion object {

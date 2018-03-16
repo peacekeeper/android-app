@@ -16,34 +16,38 @@
 ~ You should have received a copy of the GNU General Public License
 ~ along with FreedomBox. If not, see <http://www.gnu.org/licenses/>.
 -->
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/launcherSwipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/appsNotAvailable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/msg_apps_not_available"
-            android:textAlignment="center"
-            android:visibility="gone" />
-
-        <GridView
-            android:id="@+id/appGrid"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:numColumns="3"
-            android:scrollbars="none" />
+            android:layout_marginBottom="5dp"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/appsNotAvailable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/msg_apps_not_available"
+                android:textAlignment="center"
+                android:visibility="gone" />
 
-    </RelativeLayout>
+            <GridView
+                android:id="@+id/appGrid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="3"
+                android:scrollbars="none" />
 
+        </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>
