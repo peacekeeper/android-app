@@ -23,6 +23,7 @@ import android.content.SharedPreferences
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
@@ -48,11 +49,9 @@ class DiscoveryFragment : BaseFragment() {
 
     private val discoveredBoxList = mutableListOf<ConfigModel>()
 
-    private var configuredBoxSetupList = listOf<ConfigModel>()
+    private var configuredBoxList = listOf<ConfigModel>()
 
     private val SERVICE = "_http._tcp"
-
-    private var configuredBoxList = listOf<ConfigModel>()
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -60,6 +59,8 @@ class DiscoveryFragment : BaseFragment() {
     private lateinit var nsdManager: NsdManager
 
     private lateinit var discoveryListener: FBXDiscoveryListener
+
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     @Inject
     lateinit var gson: Gson
@@ -77,12 +78,8 @@ class DiscoveryFragment : BaseFragment() {
                 getString(R.string.saved_boxes))
 
         configuredBoxesJSON?.let {
-            configuredBoxSetupList += gson.fromJson<Map<String, ConfigModel>>(configuredBoxesJSON,
-                    object : TypeToken<Map<String, ConfigModel>>() {}.type).values
-
-            for (configModel in configuredBoxSetupList) {
-                configuredBoxList += configModel
-            }
+            configuredBoxList = gson.fromJson<Map<String, ConfigModel>>(configuredBoxesJSON,
+                    object : TypeToken<Map<String, ConfigModel>>() {}.type).values.toList()
 
             configuredGroup.visibility = View.VISIBLE
 
@@ -121,6 +118,12 @@ class DiscoveryFragment : BaseFragment() {
             val intent = Intent(activity, SetupActivity::class.java)
             startActivity(intent)
         }
+
+        this.swipeRefreshLayout = view!!.findViewById(R.id.discoverySwipeRefresh)
+        this.swipeRefreshLayout.setOnRefreshListener {
+            this.onActivityCreated(savedInstanceState)
+            this.swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     companion object {
@@ -153,7 +156,7 @@ class DiscoveryFragment : BaseFragment() {
             Log.d(TAG, serviceInfo.port.toString())
             Log.d(TAG, serviceInfo.host.toString())
 
-            val portConfigured = configuredBoxSetupList.filter {
+            val portConfigured = configuredBoxList.filter {
                 it.domain == serviceInfo.host.toString()
             }
             if (portConfigured.isEmpty()) {

@@ -23,55 +23,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/configuredGroup"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/discoverySwipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        tools:visibility="visible">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/configured"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/blueGrey"
-            android:padding="10dp"
-            android:text="@string/configured" />
+            android:layout_height="wrap_content">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/configuredListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/configured"
-            tools:listitem="@layout/discovery_listview" />
+            <RelativeLayout
+                android:id="@+id/configuredGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                tools:visibility="visible">
 
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/configured"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/blueGrey"
+                    android:padding="10dp"
+                    android:text="@string/configured" />
 
-    <RelativeLayout
-        android:id="@+id/discoveredGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/configuredGroup">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/configuredListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/configured"
+                    tools:listitem="@layout/discovery_listview" />
 
-        <TextView
-            android:id="@+id/discovered"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/blueGrey"
-            android:padding="10dp"
-            android:text="@string/discovered" />
+            </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/discoveredListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/discovered" />
+            <RelativeLayout
+                android:id="@+id/discoveredGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/configuredGroup">
 
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/discovered"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/blueGrey"
+                    android:padding="10dp"
+                    android:text="@string/discovered" />
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/discoveredListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/discovered" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
+        app:backgroundTint="#368EE9"
+        app:srcCompat="@drawable/ic_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -80,8 +92,6 @@
         android:layout_marginBottom="14dp"
         android:layout_marginEnd="14dp"
         android:layout_marginRight="14dp"
-        android:orientation="vertical"
-        app:backgroundTint="#368EE9"
-        app:srcCompat="@drawable/ic_add" />
+        android:orientation="vertical" />
 
 </RelativeLayout>
