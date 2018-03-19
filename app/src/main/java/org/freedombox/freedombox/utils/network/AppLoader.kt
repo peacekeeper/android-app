@@ -71,7 +71,7 @@ fun trustAnyCert() {
 
 abstract class IpAddressValidator(val regex: String) {
 
-    val pattern = Pattern.compile(regex)
+    private val pattern = Pattern.compile(regex)
 
     fun isValid(ip: String): Boolean {
         val matcher = pattern.matcher(ip)
@@ -179,6 +179,11 @@ fun getLaunchString(shortcut: Shortcut, packageManager: PackageManager, baseUrl:
     }
 }
 
+//fun isFDroidInstalled(packageManager: PackageManager): Boolean {
+//    val apps = packageManager.getInstalledApplications(0)
+//    return apps.any { app -> app.enabled and (app.packageName == "org.fdroid.fdroid") }
+//}
+
 fun findInstalledApps(packageNames: List<String>, packageManager: PackageManager): List<String> {
     val apps = packageManager.getInstalledApplications(0)
     return apps.filter { app -> app.enabled and (app.packageName in packageNames) }.map { it.packageName }
@@ -192,10 +197,10 @@ fun getAndroidPackageNames(shortcut: Shortcut): List<String> {
     return platforms.map { extractPackageName(it) }.distinct()
 }
 
-fun extractPackageName(platform: Platform) =
-        if (platform.storeName == "f-droid") {
-            platform.url.split("/").last()
-        } else platform.url.split("=").last()
+fun extractPackageName(platform: Platform): String {
+    val delimiter = if(platform.storeName == "f-droid") "/" else "="
+    return platform.url.split(delimiter).last()
+}
 
 fun getIntent(url: String, packageManager: PackageManager) =
         if (url.startsWith("http")) getWebIntent(url) else getAppIntent(url, packageManager)

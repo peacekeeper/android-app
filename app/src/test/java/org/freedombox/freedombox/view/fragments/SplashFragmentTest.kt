@@ -19,9 +19,7 @@ package org.freedombox.freedombox.view.fragments
 
 import android.content.Intent
 import android.preference.PreferenceManager
-import android.view.View
 import org.freedombox.freedombox.BuildConfig
-import org.freedombox.freedombox.R
 import org.freedombox.freedombox.views.activities.DiscoveryActivity
 import org.freedombox.freedombox.views.activities.LauncherActivity
 import org.freedombox.freedombox.views.activities.MainActivity
@@ -32,14 +30,15 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.Shadows
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowApplication
+import org.robolectric.shadows.ShadowLooper
 
 
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class)
 class SplashFragmentTest {
-    val key = "default_box"
+    val key = "saved_boxes"
     val applicationContext = RuntimeEnvironment.application.applicationContext
     val sharedPreferences = PreferenceManager
         .getDefaultSharedPreferences(applicationContext)
@@ -50,23 +49,31 @@ class SplashFragmentTest {
     }
 
     @Test
-    fun navigateToLauncherScreenWhenBoxConfigured() {
+    fun navigateToLauncherScreenWhenDefaultFreedomBoxConfigured() {
 
         val value = """
-            [{
-	            "boxName": "box",
+            {"FreedomBox": {
+	            "boxName": "FreedomBox",
 	            "default": true,
 	            "domain": "/10.42.0.1"
-            }]
+            }}
         """
 
         sharedPreferences.edit().putString(key, value).commit()
         val activity = Robolectric.setupActivity(MainActivity::class.java)
-        val shadowActvity = Shadows.shadowOf(activity)
+        ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
+        val actualIntent = ShadowApplication.getInstance().nextStartedActivity
         val expectedIntent = Intent(activity, LauncherActivity::class.java)
-        Assert.assertEquals(expectedIntent.javaClass,
-            shadowActvity.nextStartedActivity.javaClass)
+        Assert.assertEquals(expectedIntent.javaClass, actualIntent.javaClass)
+    }
 
+    @Test
+    fun navigateToDiscoveryScreenWhenNoDefaultFreedomBoxConfigured() {
+        val activity = Robolectric.setupActivity(MainActivity::class.java)
+        ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
+        val actualIntent = ShadowApplication.getInstance().nextStartedActivity
+        val expectedIntent = Intent(activity, DiscoveryActivity::class.java)
+        Assert.assertEquals(expectedIntent.javaClass, actualIntent.javaClass)
     }
 
 }

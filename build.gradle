@@ -17,7 +17,7 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.2.21'
+        kotlin_version = '1.2.30'
         dagger_version = '2.11'
         robolectric_version = '3.5.1'
         supportlib_version = '27.1.0'
