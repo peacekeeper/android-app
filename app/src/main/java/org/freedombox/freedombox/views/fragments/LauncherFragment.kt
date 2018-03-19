@@ -20,12 +20,9 @@ package org.freedombox.freedombox.views.fragments
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
-import android.util.Log
 import android.view.View
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_launcher.*
-import org.freedombox.freedombox.APP_RESPONSE
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.SERVICES_URL
 import org.freedombox.freedombox.components.AppComponent
@@ -35,6 +32,7 @@ import org.freedombox.freedombox.utils.network.apiUrl
 import org.freedombox.freedombox.utils.network.getApps
 import org.freedombox.freedombox.utils.network.urlJoin
 import org.freedombox.freedombox.utils.storage.getSharedPreference
+import org.freedombox.freedombox.utils.storage.getShortcutsMap
 import org.freedombox.freedombox.views.adapter.GridAdapter
 import org.freedombox.freedombox.views.model.ConfigModel
 import javax.inject.Inject
@@ -49,6 +47,8 @@ class LauncherFragment : BaseFragment() {
 
     override fun getLayoutId() = R.layout.fragment_launcher
 
+    private lateinit var gson: Gson
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -56,37 +56,24 @@ class LauncherFragment : BaseFragment() {
         val adapter = GridAdapter(activity!!.applicationContext, imageRenderer, currentBox.domain)
         appGrid.adapter = adapter
 
-        fun getShortcutsFromResponse(response: String): Shortcuts? {
-            val builder = GsonBuilder()
-            val gson = builder.create()
-            Log.d("RESPONSE:", response)
-            return gson.fromJson(response, Shortcuts::class.java)
-        }
-
         val onSuccess = fun(response: String) {
-            val appResponse = getSharedPreference(sharedPreferences, APP_RESPONSE)
-            val gson = GsonBuilder().create()
+            val appResponse = getSharedPreference(sharedPreferences, getString(R.string.shortcuts))
+            val updatedResponse = (getShortcutsMap(appResponse) ?: mapOf()).plus(
+                    Pair(currentBox.boxName, getShortcutsFromResponse(response)))
 
-            val updatedResponse = (appResponse?.let {
-                gson.fromJson<Map<String, Shortcuts>>(it,
-                        object : TypeToken<Map<String, Shortcuts>>() {}.type)
-            } ?: mapOf()).plus(Pair(currentBox.boxName, getShortcutsFromResponse(response)))
-
-            sharedPreferences.edit().putString(APP_RESPONSE, gson.toJson(updatedResponse)).apply()
+            sharedPreferences.edit().putString(getString(R.string.shortcuts), gson.toJson(updatedResponse)).apply()
             val shortcuts = getShortcutsFromResponse(response)!!.shortcuts
             adapter.setData(shortcuts)
         }
 
         val onFailure = fun() {
-            val responses = getSharedPreference(sharedPreferences, APP_RESPONSE)
+            val responses = getSharedPreference(sharedPreferences, getString(R.string.shortcuts))
 
-            if (responses?.isBlank() ?: true) {
+            if (responses?.isBlank() != false) {
                 appsNotAvailable.visibility = View.VISIBLE
             }
             else {
-                val gson = GsonBuilder().create()
-                val appResponseMap = gson.fromJson<Map<String, Shortcuts>>(responses,
-                        object: TypeToken<Map<String, Shortcuts>>() {}.type)
+                val appResponseMap = getShortcutsMap(responses)!!
 
                 if (appResponseMap.containsKey(currentBox.boxName))
                     adapter.setData(appResponseMap[currentBox.boxName]!!.shortcuts)
@@ -112,4 +99,8 @@ class LauncherFragment : BaseFragment() {
     }
 
     override fun injectFragment(appComponent: AppComponent) = appComponent.inject(this)
+
+    private fun getShortcutsFromResponse(response: String): Shortcuts? {
+        return gson.fromJson(response, Shortcuts::class.java)
+    }
 }

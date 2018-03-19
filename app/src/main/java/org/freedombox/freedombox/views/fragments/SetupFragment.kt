@@ -19,12 +19,11 @@ package org.freedombox.freedombox.views.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_setup.*
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
 import org.freedombox.freedombox.utils.network.wrapHttps
+import org.freedombox.freedombox.utils.storage.getConfiguredBoxesMap
 import org.freedombox.freedombox.utils.storage.getSharedPreference
 import org.freedombox.freedombox.utils.storage.putSharedPreference
 import org.freedombox.freedombox.utils.view.getEnteredText
@@ -63,10 +62,8 @@ class SetupFragment : BaseFragment() {
             wrapHttps(getEnteredText(discoveredUrl)),
             getSwitchStatus(defaultStatus))
 
-        val configuredBoxMap = (configuredBoxesJSON?.let {
-            val gson = GsonBuilder().setPrettyPrinting().create()
-            gson.fromJson<Map<String, ConfigModel>>(it, object : TypeToken<Map<String, ConfigModel>>() {}.type)
-        } ?: mapOf()).plus(Pair(configModel.boxName, configModel))
+        val configuredBoxMap = (getConfiguredBoxesMap(configuredBoxesJSON) ?: mapOf()).plus(
+                Pair(configModel.boxName, configModel))
 
         putSharedPreference(sharedPreferences,
             getString(R.string.saved_boxes),

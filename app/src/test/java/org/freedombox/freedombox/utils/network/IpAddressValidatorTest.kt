@@ -1,6 +1,6 @@
 package org.freedombox.freedombox.utils.network
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class IpAddressValidatorTest {

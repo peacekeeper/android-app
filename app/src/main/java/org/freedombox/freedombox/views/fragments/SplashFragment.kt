@@ -21,10 +21,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
+import org.freedombox.freedombox.utils.storage.getConfiguredBoxesMap
 import org.freedombox.freedombox.utils.storage.getSharedPreference
 import org.freedombox.freedombox.views.activities.DiscoveryActivity
 import org.freedombox.freedombox.views.activities.LauncherActivity
@@ -52,11 +51,10 @@ class SplashFragment : BaseFragment() {
         val configuredBoxesJSON = getSharedPreference(sharedPreferences,
                 getString(R.string.saved_boxes))
 
-        return if(configuredBoxesJSON?.isBlank() ?: true) null else {
-            val gson = GsonBuilder().setPrettyPrinting().create()
-            val configuredBoxMap = gson.fromJson<Map<String, ConfigModel>>(configuredBoxesJSON,
-                    object : TypeToken<Map<String, ConfigModel>>() {}.type)
-            configuredBoxMap.entries.find { it.value.isDefault() }?.value
+        return configuredBoxesJSON?.let {
+            if (configuredBoxesJSON.isBlank()) null else {
+            val configuredBoxMap = getConfiguredBoxesMap(configuredBoxesJSON)
+            configuredBoxMap!!.entries.find { it.value.isDefault() }?.value }
         }
 
     }

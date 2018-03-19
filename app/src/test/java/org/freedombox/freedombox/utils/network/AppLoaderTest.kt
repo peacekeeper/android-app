@@ -1,8 +1,7 @@
 package org.freedombox.freedombox.utils.network
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class AppLoaderTest {
     @Test

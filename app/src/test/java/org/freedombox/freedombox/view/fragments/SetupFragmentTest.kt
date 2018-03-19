@@ -18,15 +18,11 @@
 package org.freedombox.freedombox.view.fragments
 
 import android.preference.PreferenceManager
-import android.util.Log
 import android.widget.EditText
 import android.widget.Switch
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import org.freedombox.freedombox.BuildConfig
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.views.activities.SetupActivity
-import org.freedombox.freedombox.views.model.ConfigModel
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

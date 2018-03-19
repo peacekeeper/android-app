@@ -28,11 +28,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_discovery.*
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.components.AppComponent
 import org.freedombox.freedombox.utils.network.wrapHttps
+import org.freedombox.freedombox.utils.storage.getConfiguredBoxesMap
 import org.freedombox.freedombox.utils.storage.getSharedPreference
 import org.freedombox.freedombox.views.activities.LauncherActivity
 import org.freedombox.freedombox.views.activities.SetupActivity
@@ -78,8 +78,7 @@ class DiscoveryFragment : BaseFragment() {
                 getString(R.string.saved_boxes))
 
         configuredBoxesJSON?.let {
-            configuredBoxList = gson.fromJson<Map<String, ConfigModel>>(configuredBoxesJSON,
-                    object : TypeToken<Map<String, ConfigModel>>() {}.type).values.toList()
+            configuredBoxList = getConfiguredBoxesMap(configuredBoxesJSON)!!.values.toList()
 
             configuredGroup.visibility = View.VISIBLE
 
