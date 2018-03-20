@@ -68,6 +68,24 @@ class DiscoveryFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        fab.setOnClickListener {
+            val intent = Intent(activity, SetupActivity::class.java)
+            startActivity(intent)
+        }
+
+        this.swipeRefreshLayout = view!!.findViewById(R.id.discoverySwipeRefresh)
+        this.swipeRefreshLayout.setOnRefreshListener {
+            repopulateView()
+            this.swipeRefreshLayout.isRefreshing = false
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        repopulateView()
+    }
+
+    private fun repopulateView() {
         nsdManager = activity!!.getSystemService(NSD_SERVICE) as NsdManager
 
         discoveryListener = FBXDiscoveryListener()
@@ -112,17 +130,6 @@ class DiscoveryFragment : BaseFragment() {
                 })
         discoveredListView.layoutManager = LinearLayoutManager(activity)
         discoveredListView.adapter = discoveredBoxListAdapter
-
-        fab.setOnClickListener {
-            val intent = Intent(activity, SetupActivity::class.java)
-            startActivity(intent)
-        }
-
-        this.swipeRefreshLayout = view!!.findViewById(R.id.discoverySwipeRefresh)
-        this.swipeRefreshLayout.setOnRefreshListener {
-            this.onActivityCreated(savedInstanceState)
-            this.swipeRefreshLayout.isRefreshing = false
-        }
     }
 
     companion object {
@@ -146,11 +153,11 @@ class DiscoveryFragment : BaseFragment() {
 
     inner class FBXResolveListener : NsdManager.ResolveListener {
         override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
-            Log.e(TAG, "Resolve failed" + errorCode)
+            Log.e(TAG, "Resolve failed$errorCode")
         }
 
         override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-            Log.e(TAG, "Resolve Succeeded. " + serviceInfo)
+            Log.e(TAG, "Resolve Succeeded. $serviceInfo")
 
             Log.d(TAG, serviceInfo.port.toString())
             Log.d(TAG, serviceInfo.host.toString())
@@ -179,12 +186,12 @@ class DiscoveryFragment : BaseFragment() {
         }
 
         override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) {
-            Log.e(TAG, "Discovery failed: Error code:" + errorCode)
+            Log.e(TAG, "Discovery failed: Error code:$errorCode")
             nsdManager.stopServiceDiscovery(this)
         }
 
         override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {
-            Log.e(TAG, "Discovery failed: Error code:" + errorCode)
+            Log.e(TAG, "Discovery failed: Error code:$errorCode")
 
             nsdManager.stopServiceDiscovery(this)
         }
@@ -194,11 +201,11 @@ class DiscoveryFragment : BaseFragment() {
         }
 
         override fun onDiscoveryStopped(serviceType: String) {
-            Log.i(TAG, "Discovery stopped: " + serviceType)
+            Log.i(TAG, "Discovery stopped: $serviceType")
         }
 
         override fun onServiceLost(serviceInfo: NsdServiceInfo) {
-            Log.e(TAG, "service lost" + serviceInfo)
+            Log.e(TAG, "service lost$serviceInfo")
         }
     }
 }
