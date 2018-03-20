@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.fragment_launcher.*
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.SERVICES_URL
@@ -47,7 +48,7 @@ class LauncherFragment : BaseFragment() {
 
     override fun getLayoutId() = R.layout.fragment_launcher
 
-    private lateinit var gson: Gson
+    private val gson: Gson = GsonBuilder().create()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

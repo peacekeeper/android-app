@@ -54,7 +54,7 @@ val gson = GsonBuilder().create()
  */
 fun getConfiguredBoxesMap(configuredBoxesJSON: String?): Map<String, ConfigModel>? =
     configuredBoxesJSON?.let {
-        gson.fromJson<Map<String, ConfigModel>>(configuredBoxesJSON,
+        gson.fromJson<Map<String, ConfigModel>>(it,
                 object : TypeToken<Map<String, ConfigModel>>() {}.type)
     }
 

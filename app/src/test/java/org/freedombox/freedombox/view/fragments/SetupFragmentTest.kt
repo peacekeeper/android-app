@@ -17,11 +17,14 @@
 
 package org.freedombox.freedombox.view.fragments
 
+import android.content.Intent
 import android.preference.PreferenceManager
 import android.widget.EditText
 import android.widget.Switch
 import org.freedombox.freedombox.BuildConfig
 import org.freedombox.freedombox.R
+import org.freedombox.freedombox.utils.storage.getConfiguredBoxesMap
+import org.freedombox.freedombox.views.activities.DiscoveryActivity
 import org.freedombox.freedombox.views.activities.SetupActivity
 import org.junit.Assert
 import org.junit.Test
@@ -31,6 +34,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowApplication
+import org.robolectric.shadows.ShadowLooper
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -54,20 +59,64 @@ class SetupFragmentTest {
 
         val saveConfig = shadowActivity.findViewById(R.id.saveConfig)
         Assert.assertNotNull(saveConfig)
+
+        val deleteConfig = shadowActivity.findViewById(R.id.deleteConfig)
+        Assert.assertNotNull(deleteConfig)
     }
 
     @Test
-    fun navigateToLauncherScreenOnButtonClick() {
-
+    fun saveButtonFinishesActivityOnButtonClick() {
         val activity = Robolectric.setupActivity(SetupActivity::class.java)
         val shadowActivity = Shadows.shadowOf(activity)
         shadowActivity.findViewById(R.id.saveConfig).performClick()
-
         Assert.assertTrue(shadowActivity.isFinishing)
     }
 
     @Test
-    fun checkInformationStoredInSharedPreferenceOnButtonClick() {
+    fun deleteButtonNavigatesToDiscoveryActivityOnButtonClick() {
+        val activity = Robolectric.setupActivity(SetupActivity::class.java)
+        val shadowActivity = Shadows.shadowOf(activity)
+        shadowActivity.findViewById(R.id.deleteConfig).performClick()
+        ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
+        val actualIntent = ShadowApplication.getInstance().nextStartedActivity
+        val expectedIntent = Intent(activity, DiscoveryActivity::class.java)
+        Assert.assertEquals(expectedIntent.javaClass, actualIntent.javaClass)
+    }
+
+    @Test
+    fun deleteValidExistingConfig() {
+        val applicationContext = RuntimeEnvironment.application.applicationContext
+        val sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(applicationContext)
+
+        val boxName = "freedomBox"
+        val domain = "domain"
+        val default = false
+
+        val value = """
+            {"$boxName":{"boxName":"$boxName","domain":"https://$domain","default":false}}
+        """.trim()
+
+        val activity = Robolectric.setupActivity(SetupActivity::class.java)
+        val shadowActivity = Shadows.shadowOf(activity)
+
+        (shadowActivity.findViewById(R.id.boxName) as EditText).setText(boxName)
+        (shadowActivity.findViewById(R.id.discoveredUrl) as EditText).setText(domain)
+        (shadowActivity.findViewById(R.id.defaultStatus) as Switch).isChecked = default
+
+        shadowActivity.findViewById(R.id.saveConfig).performClick()
+
+        val configuredBoxesJSON = sharedPreferences.getString("saved_boxes", null)
+        Assert.assertEquals(value, configuredBoxesJSON)
+
+        shadowActivity.findViewById(R.id.deleteConfig).performClick()
+
+        val configAfterDelete = getConfiguredBoxesMap(sharedPreferences.getString("saved_boxes", null))
+        Assert.assertTrue(configAfterDelete?.isEmpty() ?: true)
+    }
+
+    @Test
+    fun checkInformationStoredInSharedPreferenceOnButtonClick() { // TODO replace with a fixture
         val applicationContext = RuntimeEnvironment.application.applicationContext
         val sharedPreferences = PreferenceManager
             .getDefaultSharedPreferences(applicationContext)
