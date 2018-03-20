@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.StrictMode
 import android.util.Log
 import android.widget.Toast
 import com.android.volley.Request
@@ -31,11 +32,14 @@ import com.android.volley.toolbox.Volley
 import org.freedombox.freedombox.BASE_URL
 import org.freedombox.freedombox.models.Platform
 import org.freedombox.freedombox.models.Shortcut
+import java.net.InetAddress
+import java.net.UnknownHostException
 import java.security.SecureRandom
-import java.security.cert.X509Certificate
-import javax.net.ssl.*
 import java.security.cert.CertificateException
-import java.util.regex.Pattern
+import java.security.cert.X509Certificate
+import javax.net.ssl.HttpsURLConnection
+import javax.net.ssl.SSLContext
+import javax.net.ssl.X509TrustManager
 
 
 val defaultHostNameVerifier = HttpsURLConnection.getDefaultHostnameVerifier()
@@ -69,35 +73,24 @@ fun trustAnyCert() {
 }
 
 
-abstract class IpAddressValidator(val regex: String) {
+fun isPrivateIPAddress(string: String): Boolean {
+    // FIXME Terrible hack. Should've used AsyncTask
+    StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().permitAll().build())
 
-    private val pattern = Pattern.compile(regex)
-
-    fun isValid(ip: String): Boolean {
-        val matcher = pattern.matcher(ip)
-        return matcher.find()
+    return try {
+        val address = InetAddress.getByName(string)
+        address.isSiteLocalAddress || address.isLoopbackAddress || address.isLinkLocalAddress
+    } catch (e: UnknownHostException) {
+        false
     }
 }
-
-object Ipv4AddressValidator : IpAddressValidator(
-        regex = """\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b"""
-)
-
-object Ipv6AddressValidator : IpAddressValidator(
-        regex = """(?<![:.\w])(?:[A-F0-9]{1,4}:){7}[A-F0-9]{1,4}(?![:.\w])"""
-)
-
 
 fun getApps(context: Context, uri: String,
             onSuccess: (String) -> Unit,
             onFailure: () -> Unit) {
 
     // Trust certificates of the discovered boxes on the local network
-    if (Ipv4AddressValidator.isValid(uri) || Ipv6AddressValidator.isValid(uri)) {
-        trustAnyCert()
-    } else {
-        trustValidCert()
-    }
+    if (isPrivateIPAddress(uri.split("/")[2])) trustAnyCert() else trustValidCert()
 
     val requestQueue = Volley.newRequestQueue(context)
 
