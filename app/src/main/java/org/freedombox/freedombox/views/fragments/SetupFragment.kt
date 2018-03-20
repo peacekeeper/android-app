@@ -87,13 +87,20 @@ class SetupFragment : BaseFragment() {
         val configuredBoxesJSON = getSharedPreference(sharedPreferences,
             getString(R.string.saved_boxes))
 
-        val configModel = ConfigModel(
-            getEnteredText(boxName),
-            wrapHttps(getEnteredText(discoveredUrl)),
-            getSwitchStatus(defaultStatus))
+        val savedBoxes = getConfiguredBoxesMap(configuredBoxesJSON) ?: mapOf()
 
-        val configuredBoxMap = (getConfiguredBoxesMap(configuredBoxesJSON) ?: mapOf()).plus(
-                Pair(configModel.boxName, configModel))
+        val updatedBoxes = if(savedBoxes.isNotEmpty() && getSwitchStatus(defaultStatus)) {
+            val previousDefault = savedBoxes.filterValues { it.isDefault() }.entries.first()
+            savedBoxes.plus(Pair(previousDefault.key, previousDefault.value.copy(default = false)))
+        } else savedBoxes
+
+        val configModel = ConfigModel(
+                getEnteredText(boxName),
+                wrapHttps(getEnteredText(discoveredUrl)),
+                // Make the first configured FreedomBox the default by default
+                getSwitchStatus(defaultStatus) or savedBoxes.isEmpty())
+
+        val configuredBoxMap = updatedBoxes.plus(Pair(configModel.boxName, configModel))
 
         putSharedPreference(sharedPreferences,
             getString(R.string.saved_boxes),

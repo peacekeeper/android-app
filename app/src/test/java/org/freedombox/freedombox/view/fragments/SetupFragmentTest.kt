@@ -24,8 +24,10 @@ import android.widget.Switch
 import org.freedombox.freedombox.BuildConfig
 import org.freedombox.freedombox.R
 import org.freedombox.freedombox.utils.storage.getConfiguredBoxesMap
+import org.freedombox.freedombox.utils.storage.getSharedPreference
 import org.freedombox.freedombox.views.activities.DiscoveryActivity
 import org.freedombox.freedombox.views.activities.SetupActivity
+import org.freedombox.freedombox.views.model.ConfigModel
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,7 +45,7 @@ import org.robolectric.shadows.ShadowLooper
 class SetupFragmentTest {
 
     @Test
-    fun shouldBeAbleToViewViewsInScreen() {
+    fun shouldBeAbleToSeeViewsOnTheScreen() {
 
         val activity = Robolectric.setupActivity(SetupActivity::class.java)
         val shadowActivity = Shadows.shadowOf(activity)
@@ -93,10 +95,6 @@ class SetupFragmentTest {
         val domain = "domain"
         val default = false
 
-        val value = """
-            {"$boxName":{"boxName":"$boxName","domain":"https://$domain","default":false}}
-        """.trim()
-
         val activity = Robolectric.setupActivity(SetupActivity::class.java)
         val shadowActivity = Shadows.shadowOf(activity)
 
@@ -106,8 +104,8 @@ class SetupFragmentTest {
 
         shadowActivity.findViewById(R.id.saveConfig).performClick()
 
-        val configuredBoxesJSON = sharedPreferences.getString("saved_boxes", null)
-        Assert.assertEquals(value, configuredBoxesJSON)
+        val configBeforeDelete = getConfiguredBoxesMap(sharedPreferences.getString("saved_boxes", null))
+        Assert.assertFalse(configBeforeDelete?.isEmpty() ?: true)
 
         shadowActivity.findViewById(R.id.deleteConfig).performClick()
 
@@ -118,15 +116,14 @@ class SetupFragmentTest {
     @Test
     fun checkInformationStoredInSharedPreferenceOnButtonClick() { // TODO replace with a fixture
         val applicationContext = RuntimeEnvironment.application.applicationContext
-        val sharedPreferences = PreferenceManager
-            .getDefaultSharedPreferences(applicationContext)
+        val sharedPreferences = PreferenceManager .getDefaultSharedPreferences(applicationContext)
 
         val boxName = "freedomBox"
         val domain = "domain"
         val default = false
 
         val value = """
-            {"$boxName":{"boxName":"$boxName","domain":"https://$domain","default":false}}
+            {"$boxName":{"boxName":"$boxName","domain":"https://$domain","default":true}}
         """.trim()
 
         val activity = Robolectric.setupActivity(SetupActivity::class.java)
@@ -140,5 +137,34 @@ class SetupFragmentTest {
 
         val configuredBoxesJSON = sharedPreferences.getString("saved_boxes", null)
         Assert.assertEquals(value, configuredBoxesJSON)
+    }
+
+    @Test
+    fun switchDefaultFreedomBoxToAnother() {
+        val applicationContext = RuntimeEnvironment.application.applicationContext
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
+        val boxName = "freedomBox"
+        val domain = "domain"
+
+        val value = """
+            {"$boxName":{"boxName":"$boxName","domain":"https://$domain","default":true}}
+        """.trim()
+
+        sharedPreferences.edit().putString("saved_boxes", value).apply()
+
+        val activity = Robolectric.setupActivity(SetupActivity::class.java)
+        val shadowActivity = Shadows.shadowOf(activity)
+
+        (shadowActivity.findViewById(R.id.boxName) as EditText).setText(boxName + '2')
+        (shadowActivity.findViewById(R.id.discoveredUrl) as EditText).setText(domain)
+        (shadowActivity.findViewById(R.id.defaultStatus) as Switch).isChecked = true
+
+        shadowActivity.findViewById(R.id.saveConfig).performClick()
+
+        val configuredBoxes = getConfiguredBoxesMap(getSharedPreference(sharedPreferences, "saved_boxes"))
+        val filtered = configuredBoxes!!.filterValues { it.isDefault() }
+        Assert.assertTrue(filtered.size == 1)
+        Assert.assertEquals(boxName + '2', filtered.entries.first().key)
     }
 }
