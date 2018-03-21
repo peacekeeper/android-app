@@ -36,7 +36,6 @@
                 android:id="@+id/configuredGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/centerShim"
                 android:visibility="visible"
                 tools:visibility="visible">
 
