@@ -74,7 +74,7 @@ fun trustAnyCert() {
 
 
 fun isPrivateIPAddress(string: String): Boolean {
-    // FIXME Terrible hack. Should've used AsyncTask
+    // FIXME Terrible hack. Should've used AsyncTask or activity.runOnUiThread
     StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().permitAll().build())
 
     return try {

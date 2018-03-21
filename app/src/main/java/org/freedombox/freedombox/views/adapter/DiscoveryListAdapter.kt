@@ -32,7 +32,8 @@ import org.freedombox.freedombox.views.model.ConfigModel
 class DiscoveryListAdapter(private val context: Context,
                            private val boxList: List<ConfigModel>,
                            private val isConfigured: Boolean,
-                           private val itemClickListener: DiscoveryListAdapter.OnItemClickListener) : RecyclerView.Adapter<DiscoveryListAdapter.DiscoveryListItemViewHolder>() {
+                           private val itemClickListener: DiscoveryListAdapter.OnItemClickListener):
+        RecyclerView.Adapter<DiscoveryListAdapter.DiscoveryListItemViewHolder>() {
 
     override fun onBindViewHolder(holder: DiscoveryListItemViewHolder, position: Int) {
         holder.let {

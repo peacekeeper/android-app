@@ -2,9 +2,9 @@
     <string name="app_name">FreedomBox</string>
     <string name="desc_splash_logo">Splash Logo</string>
     <string name="desc_navigate_next">Navigate Next</string>
-    <string name="msg_apps_not_available">Apps are not available. Please check network.</string>
-    <string name="msg_no_configured_freedomboxes">FreedomBoxes saved by you will appear here.</string>
-    <string name="msg_no_discovered_freedomboxes">FreedomBoxes discovered in the local network will appear here.</string>
+    <string name="msg_apps_not_available">Apps are not available. Please check network or verify the FreedomBox url.</string>
+    <string name="msg_no_configured_freedomboxes">FreedomBox servers saved by you will appear here.</string>
+    <string name="msg_no_discovered_freedomboxes">FreedomBox servers discovered in the local network will appear here.</string>
     <string name="discovered">Discovered</string>
     <string name="configured">Configured</string>
     <string name="servers">FreedomBox Servers</string>
@@ -16,10 +16,6 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="setup">Setup</string>
-    <string name="current_box" translatable="false">current_box</string>
-    <string name="default_box" translatable="false">default_box</string>
-    <string name="saved_boxes" translatable="false">saved_boxes</string>
-    <string name="shortcuts" translatable="false">shortcuts</string>
     <string name="settings">Settings</string>
     <string name="recently_connected_to">Recently connected to</string>
     <string name="freedom_boxes">Freedom Boxes</string>
@@ -27,4 +23,9 @@
     <string name="information">Information</string>
     <string name="installation_status">Installation Status</string>
     <string name="launch">Launch</string>
+
+    <string name="current_box" translatable="false">current_box</string>
+    <string name="default_box" translatable="false">default_box</string>
+    <string name="saved_boxes" translatable="false">saved_boxes</string>
+    <string name="shortcuts" translatable="false">shortcuts</string>
 </resources>
