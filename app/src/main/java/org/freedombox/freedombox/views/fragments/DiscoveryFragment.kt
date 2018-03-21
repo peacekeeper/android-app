@@ -98,7 +98,7 @@ class DiscoveryFragment : BaseFragment() {
         configuredBoxesJSON?.let {
             configuredBoxList = getConfiguredBoxesMap(configuredBoxesJSON)!!.values.toList()
 
-            configuredGroup.visibility = View.VISIBLE
+            configuredListView.visibility = View.VISIBLE
 
             val configuredBoxListAdapter = DiscoveryListAdapter(activity!!.applicationContext,
                     configuredBoxList,
@@ -115,6 +115,10 @@ class DiscoveryFragment : BaseFragment() {
             configuredListView.layoutManager = LinearLayoutManager(activity)
             configuredListView.adapter = configuredBoxListAdapter
         }
+
+        if (configuredBoxList.isEmpty()) {
+            noConfiguredFreedomBoxes.visibility = View.VISIBLE
+        } else noConfiguredFreedomBoxes.visibility = View.INVISIBLE
 
         discoveredBoxListAdapter = DiscoveryListAdapter(activity!!.applicationContext,
                 discoveredBoxList,
@@ -133,12 +137,7 @@ class DiscoveryFragment : BaseFragment() {
     }
 
     companion object {
-        fun new(args: Bundle): DiscoveryFragment {
-            val fragment = DiscoveryFragment()
-            fragment.arguments = args
-
-            return fragment
-        }
+        fun new(args: Bundle) = DiscoveryFragment().apply{ arguments = args }
     }
 
     override fun getLayoutId() = R.layout.fragment_discovery

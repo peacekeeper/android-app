@@ -3,6 +3,8 @@
     <string name="desc_splash_logo">Splash Logo</string>
     <string name="desc_navigate_next">Navigate Next</string>
     <string name="msg_apps_not_available">Apps are not available. Please check network.</string>
+    <string name="msg_no_configured_freedomboxes">FreedomBoxes saved by you will appear here.</string>
+    <string name="msg_no_discovered_freedomboxes">FreedomBoxes discovered in the local network will appear here.</string>
     <string name="discovered">Discovered</string>
     <string name="configured">Configured</string>
     <string name="servers">FreedomBox Servers</string>
