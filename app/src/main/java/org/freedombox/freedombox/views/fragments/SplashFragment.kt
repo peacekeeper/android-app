@@ -60,11 +60,7 @@ class SplashFragment : BaseFragment() {
     }
 
     companion object {
-        fun new(args: Bundle): SplashFragment {
-            val fragment = SplashFragment()
-            fragment.arguments = args
-            return fragment
-        }
+        fun new(args: Bundle) = SplashFragment().apply { arguments = args }
     }
 
     override fun injectFragment(appComponent: AppComponent) = appComponent.inject(this)

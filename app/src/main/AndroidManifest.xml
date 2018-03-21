@@ -15,7 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/FreedomBoxTheme">
 
-        <activity android:name=".views.activities.MainActivity" android:noHistory="true">
+        <activity
+            android:name=".views.activities.MainActivity"
+            android:theme="@style/FreedomBoxNoActionBarTheme"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
