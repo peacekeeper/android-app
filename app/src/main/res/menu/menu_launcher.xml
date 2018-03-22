@@ -20,8 +20,8 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.saikailas.ooty.organization.ArticleDetailActivity">
     <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings"
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_edit"
         app:showAsAction="always"
         android:title="@string/settings" />
 </menu>

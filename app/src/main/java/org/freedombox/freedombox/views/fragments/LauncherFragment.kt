@@ -20,7 +20,6 @@ package org.freedombox.freedombox.views.fragments
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
-import android.util.Log
 import android.view.View
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
