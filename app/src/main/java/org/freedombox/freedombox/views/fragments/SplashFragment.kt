@@ -37,14 +37,14 @@ class SplashFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val intent = if(getDefaultBox() != null) {
+        if(getDefaultBox() != null) {
             val intent = Intent(activity, LauncherActivity::class.java)
             intent.putExtra(getString(R.string.current_box), getDefaultBox())
-            intent
+            startActivity(intent)
         } else {
-            Intent(activity, DiscoveryActivity::class.java)
+            val intent = Intent(activity, DiscoveryActivity::class.java)
+            Handler().postDelayed({ startActivity(intent) }, 1000)
         }
-        Handler().postDelayed({ startActivity(intent) }, 1000)
     }
 
     private fun getDefaultBox(): ConfigModel? {

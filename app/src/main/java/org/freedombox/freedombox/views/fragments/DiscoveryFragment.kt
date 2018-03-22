@@ -39,6 +39,7 @@ import org.freedombox.freedombox.views.activities.SetupActivity
 import org.freedombox.freedombox.views.adapter.DiscoveryListAdapter
 import org.freedombox.freedombox.views.adapter.DiscoveryListAdapter.OnItemClickListener
 import org.freedombox.freedombox.views.model.ConfigModel
+import java.net.InetAddress
 import javax.inject.Inject
 
 class DiscoveryFragment : BaseFragment() {
@@ -145,7 +146,11 @@ class DiscoveryFragment : BaseFragment() {
     override fun injectFragment(appComponent: AppComponent) = appComponent.inject(this)
 
     override fun onDestroy() {
-        nsdManager.stopServiceDiscovery(discoveryListener)
+        try {
+            nsdManager.stopServiceDiscovery(discoveryListener)
+        } catch (e: RuntimeException) {
+            Log.e(TAG, e.message)
+        }
 
         super.onDestroy()
     }
@@ -159,16 +164,12 @@ class DiscoveryFragment : BaseFragment() {
             Log.e(TAG, "Resolve Succeeded. $serviceInfo")
 
             Log.d(TAG, serviceInfo.port.toString())
-            Log.d(TAG, serviceInfo.host.toString())
+            Log.d(TAG, serviceInfo.host.repr())
 
-            val portConfigured = configuredBoxList.filter {
-                it.domain == serviceInfo.host.toString()
-            }
-            if (portConfigured.isEmpty()) {
-                discoveredBoxList.add(ConfigModel(serviceInfo.host.toString(),
-                        serviceInfo.host.toString(), false))
-                Log.d(TAG, discoveredBoxList[0].boxName)
-            }
+            discoveredBoxList.add(ConfigModel(serviceInfo.serviceName,
+                    serviceInfo.host.repr(), false))
+            Log.d(TAG, discoveredBoxList[0].boxName)
+
             activity!!.runOnUiThread {
                 discoveredBoxListAdapter.notifyDataSetChanged()
             }
@@ -192,7 +193,11 @@ class DiscoveryFragment : BaseFragment() {
         override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {
             Log.e(TAG, "Discovery failed: Error code:$errorCode")
 
-            nsdManager.stopServiceDiscovery(this)
+            try {
+                nsdManager.stopServiceDiscovery(this)
+            } catch (e: IllegalArgumentException) {
+                Log.e(TAG, e.message)
+            }
         }
 
         override fun onDiscoveryStarted(serviceType: String) {
@@ -207,4 +212,8 @@ class DiscoveryFragment : BaseFragment() {
             Log.e(TAG, "service lost$serviceInfo")
         }
     }
+}
+
+fun InetAddress.repr(): String {
+    return this.toString().trim('/')
 }

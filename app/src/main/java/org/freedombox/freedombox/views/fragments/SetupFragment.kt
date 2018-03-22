@@ -90,8 +90,10 @@ class SetupFragment : BaseFragment() {
         val savedBoxes = getConfiguredBoxesMap(configuredBoxesJSON) ?: mapOf()
 
         val updatedBoxes = if(savedBoxes.isNotEmpty() && getSwitchStatus(defaultStatus)) {
-            val previousDefault = savedBoxes.filterValues { it.isDefault() }.entries.first()
-            savedBoxes.plus(Pair(previousDefault.key, previousDefault.value.copy(default = false)))
+            val previousDefault = savedBoxes.filterValues { it.isDefault() }.entries.firstOrNull()
+            previousDefault?.let {
+                savedBoxes.plus(Pair(previousDefault.key, previousDefault.value.copy(default = false)))
+            } ?: savedBoxes
         } else savedBoxes
 
         val configModel = ConfigModel(

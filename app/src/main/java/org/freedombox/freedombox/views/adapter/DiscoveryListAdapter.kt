@@ -37,7 +37,7 @@ class DiscoveryListAdapter(private val context: Context,
 
     override fun onBindViewHolder(holder: DiscoveryListItemViewHolder, position: Int) {
         holder.let {
-            holder.updateView(boxList[position])
+            holder.updateView(boxList.getOrNull(position))
         }
     }
 
@@ -68,9 +68,9 @@ class DiscoveryListAdapter(private val context: Context,
         }
 
         @SuppressLint("SetTextI18n")
-        fun updateView(box: ConfigModel) {
+        fun updateView(box: ConfigModel?) = box?.let{
             boxNameTextView.text = box.boxName
-            portNumberTextView.text = box.domain +"/"+ "80"
+            portNumberTextView.text = box.domain
             if (isConfigured) {
                 boxIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_freedombox_blue))
             }
