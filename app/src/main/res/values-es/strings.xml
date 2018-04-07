@@ -3,6 +3,20 @@
     <string name="desc_splash_logo">Logotipo de bienvenida</string>
     <string name="desc_navigate_next">Ir a siguiente</string>
     <string name="msg_apps_not_available">La aplicaciones no están disponibles. Por favor compruebe la red o verifique la url de Freedomox.</string>
-    <string name="msg_no_configured_freedomboxes">Aquí aparecerán los servidores de FreedomBox que haya guardado.</string>
+    <string name="msg_no_configured_freedomboxes">Aquí aparecerán los servidores FreedomBox que haya guardado.</string>
     <string name="msg_no_discovered_freedomboxes">Aquí aparecerán los servidores FreedomBox encontrados en la red local.</string>
+    <string name="discovered">Encontrados</string>
+    <string name="configured">Configurados</string>
+    <string name="servers">Servidores FreedomBox</string>
+    <string name="box_name">Nombre para FreedomBox</string>
+    <string name="username">Nombre de usuaria/o</string>
+    <string name="password">Clave</string>
+    <string name="discovered_url">URL encontrada</string>
+    <string name="switch_title">Fijar como valor por defecto</string>
+    <string name="save">Guardar</string>
+    <string name="delete">Borrar</string>
+    <string name="setup">Configuración</string>
+    <string name="settings">Ajustes</string>
+    <string name="recently_connected_to">Conectado recientemente a</string>
+    <string name="freedom_boxes">Freedom Boxes</string>
     </resources>
