@@ -1,3 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources><string name="app_name">FreedomBox</string>
+    <string name="desc_splash_logo">Logotipo de bienvenida</string>
+    <string name="desc_navigate_next">Ir a siguiente</string>
+    <string name="msg_apps_not_available">La aplicaciones no están disponibles. Por favor compruebe la red o verifique la url de Freedomox</string>
     </resources>
