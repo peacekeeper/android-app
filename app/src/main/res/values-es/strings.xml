@@ -2,5 +2,7 @@
 <resources><string name="app_name">FreedomBox</string>
     <string name="desc_splash_logo">Logotipo de bienvenida</string>
     <string name="desc_navigate_next">Ir a siguiente</string>
-    <string name="msg_apps_not_available">La aplicaciones no están disponibles. Por favor compruebe la red o verifique la url de Freedomox</string>
+    <string name="msg_apps_not_available">La aplicaciones no están disponibles. Por favor compruebe la red o verifique la url de Freedomox.</string>
+    <string name="msg_no_configured_freedomboxes">Aquí aparecerán los servidores de FreedomBox que haya guardado.</string>
+    <string name="msg_no_discovered_freedomboxes">Aquí aparecerán los servidores FreedomBox encontrados en la red local.</string>
     </resources>
