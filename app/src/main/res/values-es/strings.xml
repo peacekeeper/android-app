@@ -19,4 +19,9 @@
     <string name="settings">Ajustes</string>
     <string name="recently_connected_to">Conectado recientemente a</string>
     <string name="freedom_boxes">Freedom Boxes</string>
+    <string name="application_icon">Icono de la aplicación</string>
+    <string name="information">Información</string>
+    <string name="installation_status">Estado de la instalación</string>
+    <string name="launch">Ejecutar</string>
+
     </resources>
